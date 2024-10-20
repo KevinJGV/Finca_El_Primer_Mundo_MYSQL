@@ -228,7 +228,6 @@ INSERT INTO Tipos_Proveedores (Tipo) VALUES
 ('Proveedor de materiales de construcción'),
 ('Proveedor de energía');
 
-
 INSERT INTO Tipos_Recursos (Tipo) VALUES
 ('Animal'),
 ('Maquinaria'),
@@ -376,7 +375,6 @@ INSERT INTO Clientes (Nombre, Apellido, Fecha_Nacimiento, Telefono, ID_Estado, I
 ('Diego', 'Peñuela', '1995-01-10', 3008901236, 1, 1, 14),
 ('Sara', 'Torres', '1989-11-18', 3009012349, 1, 5, 12),
 ('Nicolás', 'Parra', '1992-10-23', 3000123458, 1, 4, 5);
-
 
 INSERT INTO Empleados (Nombre, Apellido, Salario, Fecha_Contratacion, ID_Estado, ID_Tipo_Empleado) VALUES
 ('Carlos', 'González', 1500.00, '2023-01-15', 1, 1),
@@ -592,7 +590,6 @@ INSERT INTO Productos (Nombre, Stock, Valor, Costo, ID_Descuento, ID_Estado, ID_
 ('Aceite de semilla de girasol', 35, 300.00, 320.00, 3, 1, 11, 1, 24),
 ('Harina de espelta', 50, 52.00, 50.00, 4, 1, 12, 1, 25),
 ('Jugo de limón', 40, 115.00, 115.00, 5, 1, 13, 1, 26);
-
 
 INSERT INTO Detalles_Ventas (Cantidad, Subtotal, ID_Venta, ID_Producto) VALUES 
 (2, 4000.00, 1, 1),
@@ -833,7 +830,6 @@ INSERT INTO Detalles_Compras (Precio_Unitario, Cantidad, Subtotal, ID_Compra, ID
 (80.00, 20, 1600.00, 15, 28),
 (30.00, 15, 450.00, 15, 29),
 (25.00, 30, 750.00, 16, 30);
-
 
 INSERT INTO Tareas (Descripción, Fecha_inicio, Fecha_fin, Resultado_Porcentaje, ID_Sector, ID_Estado, ID_Tipo_Tarea)
 VALUES
