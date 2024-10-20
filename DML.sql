@@ -1,3 +1,5 @@
+USE Finca_El_Primer_Mundo;
+
 INSERT INTO Estados (Nombre)
 VALUES
 ('Activo'),
