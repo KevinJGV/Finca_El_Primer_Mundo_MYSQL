@@ -132,7 +132,6 @@ BEGIN
     SET ID_Estado = 6 
     WHERE ID = NEW.ID_Producto AND Stock < 1;
 END;
-drop TRIGGER ProductoCancelado;
 -- INSERT INTO detalles_ventas (Cantidad,Subtotal,ID_Venta,ID_Producto) VALUES (1,432.93,55,1);
 -- By @JavierEAcevedoN
 

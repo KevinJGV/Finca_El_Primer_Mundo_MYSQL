@@ -260,3 +260,26 @@ CREATE TABLE
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Mensaje TEXT NOT NULL
     );
+
+CREATE TABLE
+    notificaciones (
+        ID INT PRIMARY KEY AUTO_INCREMENT,
+        ID_Cliente INT NOT NULL,
+        Mensaje TEXT NOT NULL,
+        Fecha DATETIME NOT NULL
+    );
+
+CREATE TABLE
+    resumen_ventas (
+        ID INT PRIMARY KEY AUTO_INCREMENT,
+        Fecha DATE NOT NULL,
+        TotalVentas DECIMAL(9,2)
+    );
+
+CREATE TABLE
+    recordatorios (
+        ID INT PRIMARY KEY AUTO_INCREMENT,
+        ID_Empleado INT NOT NULL,
+        Mensaje TEXT NOT NULL,
+        Fecha DATETIME NOT NULL
+    );
