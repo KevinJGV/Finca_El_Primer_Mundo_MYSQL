@@ -239,3 +239,24 @@ CREATE TABLE
         FOREIGN KEY (ID_Empleado) REFERENCES Empleados (ID),
         FOREIGN KEY (ID_Tarea) REFERENCES Tareas (ID)
     );
+
+
+
+
+
+
+
+
+-- Tablas de registro.
+
+CREATE TABLE
+    Registro_Clientes (
+        ID INT PRIMARY KEY AUTO_INCREMENT,
+        Mensaje TEXT NOT NULL
+    );
+
+CREATE TABLE
+    Registro_Productos (
+        ID INT PRIMARY KEY AUTO_INCREMENT,
+        Mensaje TEXT NOT NULL
+    );
