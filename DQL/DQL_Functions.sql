@@ -1,7 +1,6 @@
 USE Finca_El_Primer_Mundo;
 
-DELIMITER / /
-
+DELIMITER //
 -- 1. Obtener el nombre completo del cliente.
 -- Obtiene el nombre completo del cliente por medio de su ID.
 CREATE FUNCTION NombreCompletoCliente(ID_Cliente INT)
@@ -13,7 +12,7 @@ BEGIN
     SELECT
         CONCAT(Nombre," ",Apellido)
     INTO NombreCompleto
-    FROM clientes
+    FROM Clientes
     WHERE ID = ID_Cliente;
 
     RETURN NombreCompleto;
@@ -33,7 +32,7 @@ BEGIN
         SUM(dv.Subtotal)
     INTO Subtotal
     FROM Ventas ve
-    INNER JOIN detalles_ventas dv ON ve.ID = dv.ID_Venta
+    INNER JOIN Detalles_Ventas dv ON ve.ID = dv.ID_Venta
     WHERE ve.ID_Cliente = ID_Cliente
     GROUP BY ve.ID_Cliente;
 
@@ -53,7 +52,7 @@ BEGIN
     SELECT
         Valor
     INTO Precio
-    FROM productos
+    FROM Productos
     WHERE ID = ID_Producto;
 
     RETURN Precio;
@@ -72,7 +71,7 @@ BEGIN
     SELECT
         SUM(Subtotal)
     INTO Total
-    FROM detalles_ventas
+    FROM Detalles_Ventas
     WHERE ID_Venta = Venta_ID
     GROUP BY ID_Venta;
 
@@ -92,8 +91,8 @@ BEGIN
     SELECT
         tp.Tipo
     INTO TipoProducto
-    FROM productos pr
-    INNER JOIN tipos_productos tp ON pr.ID_Tipo_Producto = tp.ID
+    FROM Productos pr
+    INNER JOIN Tipos_Productos tp ON pr.ID_Tipo_Producto = tp.ID
     WHERE pr.ID = ID_Producto;
 
     RETURN TipoProducto;
@@ -116,8 +115,8 @@ BEGIN
     INTO
         Precio,
         Descuento
-    FROM productos pr
-    INNER JOIN descuentos ds ON pr.ID_Descuento = ds.ID
+    FROM Productos pr
+    INNER JOIN Descuentos ds ON pr.ID_Descuento = ds.ID
     WHERE pr.ID = ID_Producto;
 
     RETURN (Precio - (Precio * (Descuento/100)));
@@ -137,7 +136,7 @@ BEGIN
         CONCAT(em.Nombre," ",em.Apellido)
     INTO NombreCompleto
     FROM Ventas ve
-    INNER JOIN empleados em ON ve.ID_Empleado = em.ID
+    INNER JOIN Empleados em ON ve.ID_Empleado = em.ID
     WHERE ve.ID = ID_Venta;
 
     RETURN NombreCompleto;
@@ -157,7 +156,7 @@ BEGIN
         Valor
     INTO
         Precio
-    FROM productos
+    FROM Productos
     WHERE ID = ID_Producto;
 
     RETURN (Precio + (Precio * (19/100)));
@@ -193,10 +192,10 @@ BEGIN
     DECLARE Promedio DECIMAL(9,2);
 
     SELECT
-        AVG(pr.`Valor`)
+        AVG(pr.Valor)
     INTO Promedio
-    FROM productos pr
-    INNER JOIN tipos_productos tp ON pr.ID_Tipo_Producto = tp.ID
+    FROM Productos pr
+    INNER JOIN Tipos_Productos tp ON pr.ID_Tipo_Producto = tp.ID
     WHERE tp.Tipo = TipoProducto;
 
     RETURN Promedio;
@@ -205,7 +204,6 @@ END//
 -- By @JavierEAcevedoN
 
 -- 11. Obtener el número total de clientes registrados.
-
 CREATE FUNCTION TotalClientes()
 RETURNS INT
 READS SQL DATA
@@ -223,11 +221,9 @@ BEGIN
 
     RETURN Cantidad_Total;
 END//
-
-SELECT TotalClientes();
+-- SELECT TotalClientes();
 
 -- 12. Calcular el total de ingresos generados en un mes.
-
 CREATE FUNCTION TotalIngresosMesYAño(pMes INT,pAño INT)
 RETURNS DECIMAL(9,2)
 READS SQL DATA
@@ -248,11 +244,9 @@ BEGIN
     END IF;
     RETURN Valor_;
 END//
-
-SELECT TotalIngresosMesYAño(11,2024);
+-- SELECT TotalIngresosMesYAño(11,2024);
 
 -- 13. Obtener el nombre completo del cliente que más ha comprado. (Según cantidad de productos)
-
 CREATE FUNCTION NombreClienteMayorCompras()
 RETURNS VARCHAR(50)
 READS SQL DATA
@@ -299,11 +293,9 @@ BEGIN
     ("FUNCION",proceso_nombre,NOW(),USER(),"Nombre del Cliente con Mas Compras Obtenido","Clientes",ID_);
     RETURN Nombre_;
 END//
-
-SELECT NombreClienteMayorCompras();
+-- SELECT NombreClienteMayorCompras();
 
 -- 14. Calcular el monto total de una venta específica.
-
 CREATE FUNCTION MontoTotalVenta(pVenta_ID INT)
 RETURNS DECIMAL(9,2)
 READS SQL DATA
@@ -330,8 +322,7 @@ BEGIN
     END IF;
     RETURN Valor_;
 END//
-
-SELECT MontoTotalVenta(10000);
+-- SELECT MontoTotalVenta(10000);
 
 -- 15. Obtener el nombre del producto más vendido.
 CREATE FUNCTION NombreProductoMasVendido()
@@ -378,8 +369,7 @@ BEGIN
     ("FUNCION",proceso_nombre,NOW(),USER(),"Nombre del Producto Mas Caro Obtenido","Productos",ID_);
     RETURN Nombre_;
 END//
-
-SELECT NombreProductoMasVendido();
+-- SELECT NombreProductoMasVendido();
 
 -- 16. Calcular el porcentaje de ventas de un empleado.
 CREATE FUNCTION PorcentajeVentasxEmpleado(pEmpleado_ID INT)
@@ -413,7 +403,6 @@ BEGIN
     END IF;
     RETURN Porcentaje;
 END//
-
 SELECT PorcentajeVentasxEmpleado(3);
 
 -- 17. Obtener el nombre del producto más caro.
@@ -445,10 +434,9 @@ BEGIN
     ("FUNCION",proceso_nombre,NOW(),USER(),"Nombre del Producto Mas Caro Obtenido","Productos",ID_);
     RETURN Nombre_;
 END//
+-- SELECT NombreProductoMasCaro();
 
-SELECT NombreProductoMasCaro();
 -- 18. Obtener el número total de tipos registrados.
-DELIMITER //
 CREATE FUNCTION CantidadTipos()
 RETURNS INT
 READS SQL DATA
@@ -481,11 +469,9 @@ BEGIN
 
     RETURN Cantidad_Total;
 END//
-
 SELECT CantidadTipos();
 
 -- 19. Obtener el producto menos vendido.
-DELIMITER //
 CREATE FUNCTION ProductoMenosVendido()
 RETURNS INT
 READS SQL DATA
@@ -515,11 +501,9 @@ BEGIN
 
     RETURN ID_;
 END//
+-- SELECT ProductoMenosVendido();
 
-SELECT ProductoMenosVendido();
 -- 20. Calcular el total de ganancias de un empleado.
-DELIMITER //
-
 CREATE FUNCTION CalcularGananciasEmpleado(pID_Empleado INT)
 RETURNS DECIMAL(9,2)
 READS SQL DATA
@@ -561,7 +545,6 @@ BEGIN
 
     RETURN Total;
 END//
-
-SELECT CalcularGananciasEmpleado (1);
+-- SELECT CalcularGananciasEmpleado (1);
 
 DELIMITER;

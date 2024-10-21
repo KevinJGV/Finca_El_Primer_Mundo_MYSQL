@@ -7,7 +7,7 @@ DELIMITER //
 CREATE EVENT LimpiarPreciosProductos
 ON SCHEDULE EVERY 6 MONTH
 DO
-    DELETE FROM registro_productos;
+    DELETE FROM Logs WHERE Nombre_Actividad = "RegistroPrecioProducto";
 -- By @JavierEAcevedoN
 
 -- 2. Actualizar el stock de productos a cero.
@@ -26,7 +26,7 @@ DO
 CREATE EVENT NotificarClientesInactivos
 ON SCHEDULE EVERY 1 MONTH
 DO
-    INSERT INTO notificaciones  (ID_Cliente, Mensaje, Fecha)
+    INSERT INTO Notificaciones (ID_Cliente, Mensaje, Fecha)
     SELECT ID, 'Hemos notado que no has comprado recientemente. ¡Te extrañamos!', NOW()
     FROM clientes
     WHERE ID_Estado = 2;
@@ -37,7 +37,7 @@ DO
 CREATE EVENT ResumenVentasDiario
 ON SCHEDULE EVERY 1 DAY
 DO
-    INSERT INTO resumen_ventas (Fecha, TotalVentas)
+    INSERT INTO ResumenVentas (Fecha, TotalVentas)
     SELECT CURDATE(), SUM(total) FROM ventas WHERE Fecha = CURDATE();
 -- By @JavierEAcevedoN
 
@@ -46,18 +46,18 @@ DO
 CREATE EVENT RecordarFechaContratacionEmpleados
 ON SCHEDULE EVERY 1 MONTH
 DO
-    INSERT INTO recordatorios (ID_Empleado, Mensaje, Fecha)
+    INSERT INTO Recordatorios (ID_Empleado, Mensaje, Fecha)
     SELECT `ID`, CONCAT('¡Feliz aniversario, ',Nombre," ",Apellido,'!'), NOW()
     FROM empleados
     WHERE MONTH(Fecha_Contratacion) = MONTH(NOW()) AND DAY(Fecha_Contratacion) = DAY(NOW());
 -- By @JavierEAcevedoN
 
--- 6. Limpiar registros recordatorios.
--- Elimina todos los registros de recordatorios cada 6 meses.
+-- 6. Limpiar registros Recordatorios.
+-- Elimina todos los registros de Recordatorios cada 6 meses.
 CREATE EVENT EliminarRegistrosRecordatorios
 ON SCHEDULE EVERY 6 MONTH
 DO
-    DELETE FROM recordatorios;
+    DELETE FROM Recordatorios;
 -- By @JavierEAcevedoN
 
 -- 7. Eliminar registros de ventas antiguas.
@@ -76,15 +76,15 @@ DO
 CREATE EVENT LimpiarResumenVentas
 ON SCHEDULE EVERY 5 YEAR
 DO
-    DELETE FROM resumen_ventas;
+    DELETE FROM ResumenVentas;
 -- By @JavierEAcevedoN
 
 -- 9. LimpiarNotificaciones
--- Limpia los registros de notificaciones.
+-- Limpia los registros de Notificaciones.
 CREATE EVENT nombreevento
 ON SCHEDULE EVERY 1 YEAR
 DO
-    DELETE FROM notificaciones;
+    DELETE FROM Notificaciones;
 -- By @JavierEAcevedoN
 
 -- 10. Aumentar el salario de los empleados.
@@ -105,7 +105,7 @@ ENDS fechaconhora -- opcional
 DO
     -- CODE;
 
--- 12. Enviar recordatorios de pago a clientes morosos.
+-- 12. Enviar Recordatorios de pago a clientes morosos.
 
 CREATE EVENT nombreevento
 ON SCHEDULE EVERY numero intervalodetiempo

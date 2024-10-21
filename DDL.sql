@@ -4,19 +4,19 @@ CREATE DATABASE IF NOT EXISTS Finca_El_Primer_Mundo;
 
 USE Finca_El_Primer_Mundo;
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Estados (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Nombre VARCHAR(50) NOT NULL UNIQUE
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Departamentos (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Nombre VARCHAR(50) NOT NULL UNIQUE
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Ciudades (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Nombre VARCHAR(50) NOT NULL,
@@ -25,69 +25,69 @@ CREATE TABLE
         UNIQUE (Nombre, ID_Departamento)
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Descuentos (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Valor INT NOT NULL UNIQUE
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Tipos_Proveedores (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Tipo VARCHAR(50) NOT NULL UNIQUE
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Tipos_Recursos (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Tipo VARCHAR(50) NOT NULL UNIQUE
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Tipos_Productos (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Tipo VARCHAR(50) NOT NULL UNIQUE
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Tipos_Empleados (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Tipo VARCHAR(50) NOT NULL UNIQUE
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Tipos_Tareas (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Tipo VARCHAR(50) NOT NULL UNIQUE
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Medios_de_Pago (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Tipo VARCHAR(50) NOT NULL UNIQUE
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Unidades_Medida (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Unidad VARCHAR(20) NOT NULL UNIQUE
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Lotes (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Fecha_Produccion DATE NOT NULL,
         Cantidad INT NOT NULL
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Sectores (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Nombre VARCHAR(50) NOT NULL UNIQUE,
         Hectareas DECIMAL(9, 2) NOT NULL
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Clientes (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Nombre VARCHAR(50) NOT NULL,
@@ -102,7 +102,7 @@ CREATE TABLE
         FOREIGN KEY (ID_Ciudad) REFERENCES Ciudades (ID)
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Empleados (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Nombre VARCHAR(50) NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE
         FOREIGN KEY (ID_Tipo_Empleado) REFERENCES Tipos_Empleados (ID)
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Ventas (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Fecha DATE NOT NULL,
@@ -128,7 +128,7 @@ CREATE TABLE
         FOREIGN KEY (ID_Medio_de_Pago) REFERENCES Medios_de_Pago (ID)
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Recursos (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Nombre VARCHAR(50) NOT NULL,
@@ -144,7 +144,7 @@ CREATE TABLE
         FOREIGN KEY (Recurso_Generador_ID) REFERENCES Recursos (ID)
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Productos (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Nombre VARCHAR(50) NOT NULL,
@@ -163,7 +163,7 @@ CREATE TABLE
         FOREIGN KEY (ID_Recurso) REFERENCES Recursos (ID)
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Detalles_Ventas (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Cantidad INT NOT NULL,
@@ -174,7 +174,7 @@ CREATE TABLE
         FOREIGN KEY (ID_Producto) REFERENCES Productos (ID)
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Proveedores (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Nombre VARCHAR(50) NOT NULL UNIQUE,
@@ -184,7 +184,7 @@ CREATE TABLE
         FOREIGN KEY (ID_Tipo_Proveedor) REFERENCES Tipos_Proveedores (ID)
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Compras (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Fecha DATE NOT NULL,
@@ -195,7 +195,7 @@ CREATE TABLE
         FOREIGN KEY (ID_Estado) REFERENCES Estados (ID)
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Detalles_Compras (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Precio_Unitario DECIMAL(9, 2) NOT NULL,
@@ -207,7 +207,7 @@ CREATE TABLE
         FOREIGN KEY (ID_Recurso) REFERENCES Recursos (ID)
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Tareas (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Descripción TEXT NOT NULL,
@@ -222,7 +222,7 @@ CREATE TABLE
         FOREIGN KEY (ID_Tipo_Tarea) REFERENCES Tipos_Tareas (ID)
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Recursos_Tareas (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         ID_Recurso INT NOT NULL,
@@ -231,7 +231,7 @@ CREATE TABLE
         FOREIGN KEY (ID_Tarea) REFERENCES Tareas (ID)
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Empleados_Tareas (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         ID_Empleado INT NOT NULL,
@@ -249,49 +249,37 @@ CREATE TABLE
 
 -- Tablas de registro.
 
-CREATE TABLE
-    Registro_Clientes (
-        ID INT PRIMARY KEY AUTO_INCREMENT,
-        Mensaje TEXT NOT NULL
-    );
-
-CREATE TABLE
-    Registro_Productos (
-        ID INT PRIMARY KEY AUTO_INCREMENT,
-        Mensaje TEXT NOT NULL
-    );
-
-CREATE TABLE
-    notificaciones (
+CREATE TABLE IF NOT EXISTS
+    Notificaciones (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         ID_Cliente INT NOT NULL,
         Mensaje TEXT NOT NULL,
         Fecha DATETIME NOT NULL
     );
 
-CREATE TABLE
-    resumen_ventas (
+CREATE TABLE IF NOT EXISTS
+    ResumenVentas (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Fecha DATE NOT NULL,
         TotalVentas DECIMAL(9,2)
     );
 
-CREATE TABLE
-    recordatorios (
+CREATE TABLE IF NOT EXISTS
+    Recordatorios (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         ID_Empleado INT NOT NULL,
         Mensaje TEXT NOT NULL,
         Fecha DATETIME NOT NULL
     );
 
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
     Logs (
         ID INT PRIMARY KEY AUTO_INCREMENT,
         Tipo_Actividad ENUM('PROCEDIMIENTO', 'FUNCION', 'TRIGGER', 'EVENTO') NOT NULL,
         Nombre_Actividad VARCHAR(50) NOT NULL,
         Fecha DATETIME NOT NULL,
         Usuario_Ejecutor VARCHAR(50),
-        Detalles VARCHAR(100) NOT NULL,
+        Detalles TEXT NOT NULL,
         Tabla_Afectada VARCHAR(50) NOT NULL,
         ID_Referencia INT
     );
