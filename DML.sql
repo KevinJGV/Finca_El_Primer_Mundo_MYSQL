@@ -425,13 +425,13 @@ INSERT INTO Empleados (Nombre, Apellido, Salario, Fecha_Contratacion, ID_Estado,
 ('Daniela', 'Cortés', 1500.75, '2022-08-19', 1, 2),
 ('Felipe', 'Uribe', 1650.00, '2022-09-15', 1, 3),
 ('Laura', 'Gómez', 1700.00, '2022-10-10', 1, 1),
-('Mauricio', 'Valencia', 1450.50, '2022-11-05', 1, 4),
-('Victoria', 'Cárdenas', 1600.00, '2022-12-01', 1, 2),
-('Óscar', 'Reyes', 1750.25, '2023-01-20', 1, 3),
-('Mariana', 'Hernández', 1500.00, '2023-02-18', 1, 1),
-('Alejandro', 'Melo', 1620.00, '2023-03-25', 1, 4),
-('Jessica', 'Sánchez', 1680.50, '2023-04-15', 1, 2),
-('César', 'González', 1550.00, '2023-05-28', 1, 3);
+('Mauricio', 'Valencia', 1450.50, '2022-11-05', 2, 4),
+('Victoria', 'Cárdenas', 1600.00, '2022-12-01', 2, 2),
+('Óscar', 'Reyes', 1750.25, '2023-01-20', 2, 3),
+('Mariana', 'Hernández', 1500.00, '2023-02-18', 2, 1),
+('Alejandro', 'Melo', 1620.00, '2023-03-25', 2, 4),
+('Jessica', 'Sánchez', 1680.50, '2023-04-15', 2, 2),
+('César', 'González', 1550.00, '2023-05-28', 2, 3);
 
 INSERT INTO Ventas (Fecha, Total, ID_Cliente, ID_Empleado, ID_Medio_de_Pago) VALUES
 ('2024-11-20', 250.00, 1, 1, 2), 
@@ -966,3 +966,6 @@ INSERT INTO Empleados_Tareas (ID_Empleado, ID_Tarea) VALUES
 (23, 23),
 (24, 24),
 (25, 25);
+
+INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+("",proceso_nombre,NOW(),USER(),"","",);

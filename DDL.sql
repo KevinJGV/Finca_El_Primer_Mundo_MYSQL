@@ -239,3 +239,15 @@ CREATE TABLE
         FOREIGN KEY (ID_Empleado) REFERENCES Empleados (ID),
         FOREIGN KEY (ID_Tarea) REFERENCES Tareas (ID)
     );
+
+CREATE TABLE
+    Logs (
+        ID INT PRIMARY KEY AUTO_INCREMENT,
+        Tipo_Actividad ENUM('PROCEDIMIENTO', 'FUNCION', 'TRIGGER', 'EVENTO') NOT NULL,
+        Nombre_Actividad VARCHAR(50) NOT NULL,
+        Fecha DATETIME NOT NULL,
+        Usuario_Ejecutor VARCHAR(50),
+        Detalles VARCHAR(100) NOT NULL,
+        Tabla_Afectada VARCHAR(50) NOT NULL,
+        ID_Referencia INT
+    );
