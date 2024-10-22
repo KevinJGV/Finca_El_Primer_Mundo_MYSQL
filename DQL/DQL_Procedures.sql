@@ -147,7 +147,7 @@ BEGIN
         Usuario_Ejecutor,
         Detalles,
         Tabla_Afectada,
-        `ID_Referencia`
+        ID_Referencia
         ) 
         VALUES
         (
@@ -248,7 +248,7 @@ BEGIN
         Usuario_Ejecutor,
         Detalles,
         Tabla_Afectada,
-        `ID_Referencia`
+        ID_Referencia
         ) 
         VALUES
         (
@@ -287,7 +287,7 @@ BEGIN
         Usuario_Ejecutor,
         Detalles,
         Tabla_Afectada,
-        `ID_Referencia`
+        ID_Referencia
         ) 
         VALUES
         (

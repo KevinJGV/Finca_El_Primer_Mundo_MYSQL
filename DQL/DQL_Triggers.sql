@@ -250,7 +250,7 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No hay suficiente stock para del producto para la venta.';
     END IF;
 END//
-INSERT INTO `Detalles_Ventas` (Cantidad,Subtotal,ID_Venta,ID_Producto) VALUES (1,432.93,32,1);
+INSERT INTO Detalles_Ventas (Cantidad,Subtotal,ID_Venta,ID_Producto) VALUES (1,432.93,32,1);
 -- By @JavierEAcevedoN
 
 -- 11. Actualizar la fecha de modificación en la tabla de productos.
