@@ -209,6 +209,8 @@ RETURNS INT
 READS SQL DATA
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'TotalClientes';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT "Clientes";
+    DECLARE Detalle TEXT DEFAULT 'Contados Todos Los Clientes';
     DECLARE Cantidad_Total INT;
 
     SELECT
@@ -217,7 +219,7 @@ BEGIN
         Clientes;
     
     INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
-    ("FUNCION",proceso_nombre,NOW(),USER(),"Contados Todos Los Clientes","Clientes");
+    ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
 
     RETURN Cantidad_Total;
 END//
@@ -229,6 +231,8 @@ RETURNS DECIMAL(9,2)
 READS SQL DATA
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'TotalIngresosMesYAño';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT "Ventas";
+    DECLARE Detalle TEXT DEFAULT 'Total de Ingresos en un Mes Calculado';
     DECLARE Valor_ DECIMAL(9,2);
 
     SELECT
@@ -240,7 +244,7 @@ BEGIN
 
     IF pMes BETWEEN 1 AND 12 AND pAño <= CURDATE() THEN
         INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
-        ("FUNCION",proceso_nombre,NOW(),USER(),"Total de Ingresos en un Mes Calculado","Ventas");
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
     END IF;
     RETURN Valor_;
 END//
@@ -252,6 +256,8 @@ RETURNS VARCHAR(50)
 READS SQL DATA
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'NombreClienteMayorCompras';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT "Clientes";
+    DECLARE Detalle TEXT DEFAULT 'Nombre del Cliente con Mas Compras Obtenido';
     DECLARE ID_ INT;
     DECLARE Nombre_ VARCHAR(50);
 
@@ -290,7 +296,7 @@ BEGIN
     ) AS SUB;
 
     INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
-    ("FUNCION",proceso_nombre,NOW(),USER(),"Nombre del Cliente con Mas Compras Obtenido","Clientes",ID_);
+    ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,ID_);
     RETURN Nombre_;
 END//
 -- SELECT NombreClienteMayorCompras();
@@ -301,6 +307,8 @@ RETURNS DECIMAL(9,2)
 READS SQL DATA
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'MontoTotalVenta';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT "Ventas";
+    DECLARE Detalle TEXT DEFAULT 'Monto Total de Venta Calculado';
     DECLARE Valor_ DECIMAL(9,2);
     SET @max_ID = 0;
 
@@ -318,18 +326,21 @@ BEGIN
     
     IF pVenta_ID <= @max_ID THEN
         INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
-        ("FUNCION",proceso_nombre,NOW(),USER(),"Monto Total de Venta Calculado","Ventas",pVenta_ID);
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pVenta_ID);
     END IF;
     RETURN Valor_;
 END//
 -- SELECT MontoTotalVenta(10000);
 
 -- 15. Obtener el nombre del producto más vendido.
+DELIMITER //
 CREATE FUNCTION NombreProductoMasVendido()
 RETURNS VARCHAR(50)
 READS SQL DATA
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'NombreProductoMasVendido';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT "Productos";
+    DECLARE Detalle TEXT DEFAULT 'Nombre del Producto Mas Caro Obtenido';
     DECLARE ID_ INT;
     DECLARE Nombre_ VARCHAR(50);
 
@@ -366,17 +377,20 @@ BEGIN
     ) AS Sub;
 
     INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
-    ("FUNCION",proceso_nombre,NOW(),USER(),"Nombre del Producto Mas Caro Obtenido","Productos",ID_);
+    ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,ID_);
     RETURN Nombre_;
 END//
 -- SELECT NombreProductoMasVendido();
 
 -- 16. Calcular el porcentaje de ventas de un empleado.
+DELIMITER //
 CREATE FUNCTION PorcentajeVentasxEmpleado(pEmpleado_ID INT)
 RETURNS DECIMAL(3,1)
 READS SQL DATA
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'PorcentajeVentasxEmpleado';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT "Ventas";
+    DECLARE Detalle TEXT DEFAULT 'Porcentaje de Ventas por Empleado Obtenido';
     DECLARE Porcentaje DECIMAL(3,1);
     DECLARE TOTAL_V INT;
     SET @max_ID = 0;
@@ -397,20 +411,23 @@ BEGIN
         MAX(E.ID) INTO @max_ID
     FROM Empleados E;
 
-    IF pID_Empleado <= @max_ID THEN
+    IF pEmpleado_ID <= @max_ID THEN
         INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
-        ("FUNCION",proceso_nombre,NOW(),USER(),"Porcentaje de Ventas por Empleado Obtenido","Ventas",pEmpleado_ID);
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pEmpleado_ID);
     END IF;
     RETURN Porcentaje;
 END//
 SELECT PorcentajeVentasxEmpleado(3);
 
 -- 17. Obtener el nombre del producto más caro.
+DELIMITER //
 CREATE FUNCTION NombreProductoMasCaro()
 RETURNS VARCHAR(50)
 READS SQL DATA
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'NombreProductoMasCaro';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT "Productos";
+    DECLARE Detalle TEXT DEFAULT 'Nombre del Producto Mas Caro Obtenido';
     DECLARE ID_ INT;
     DECLARE Nombre_ VARCHAR(50);
 
@@ -431,7 +448,7 @@ BEGIN
     LIMIT 1;
 
     INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
-    ("FUNCION",proceso_nombre,NOW(),USER(),"Nombre del Producto Mas Caro Obtenido","Productos",ID_);
+    ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,ID_);
     RETURN Nombre_;
 END//
 -- SELECT NombreProductoMasCaro();
@@ -442,30 +459,32 @@ RETURNS INT
 READS SQL DATA
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'TodosLosTipos';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT "Tablas 'Tipos_'";
+    DECLARE Detalle TEXT DEFAULT 'Contados Todos Los Tipos';
     DECLARE Cantidad_Total INT DEFAULT 0;
 
     SELECT
         (COUNT(T.ID) + Cantidad_Total) INTO Cantidad_Total
-    FROM tipos_empleados T;
+    FROM Tipos_Empleados T;
 
     SELECT
         (COUNT(T.ID) + Cantidad_Total) INTO Cantidad_Total
-    FROM tipos_productos T;
+    FROM Tipos_Productos T;
 
     SELECT
         (COUNT(T.ID) + Cantidad_Total) INTO Cantidad_Total
-    FROM tipos_proveedores T;
+    FROM Tipos_Proveedores T;
 
     SELECT
         (COUNT(T.ID) + Cantidad_Total) INTO Cantidad_Total
-    FROM tipos_recursos T;
+    FROM Tipos_Recursos T;
 
     SELECT
         (COUNT(T.ID) + Cantidad_Total) INTO Cantidad_Total
-    FROM tipos_tareas T;
+    FROM Tipos_Tareas T;
 
     INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
-    ("FUNCION",proceso_nombre,NOW(),USER(),"Contados Todos Los Tipos","Tablas 'Tipos_'");
+    ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
 
     RETURN Cantidad_Total;
 END//
@@ -477,6 +496,8 @@ RETURNS INT
 READS SQL DATA
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ProductoMenosVendido';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Detalles_Ventas';
+    DECLARE Detalle TEXT DEFAULT 'Producto Menos Vendido Obtenido';
     DECLARE ID_ INT;
 
     SELECT
@@ -497,7 +518,7 @@ BEGIN
         ) AS S;
     
     INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
-    ("FUNCION",proceso_nombre,NOW(),USER(),"Producto Menos Vendido Obtenido","Detalles_Ventas",ID_);
+    ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,ID_);
 
     RETURN ID_;
 END//
@@ -509,6 +530,8 @@ RETURNS DECIMAL(9,2)
 READS SQL DATA
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'CalcularGananciasEmpleado';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Empleados';
+    DECLARE Detalle TEXT DEFAULT 'Ganancias Totales de Usuario Calculado';
     DECLARE Total DECIMAL(9,2);
     DECLARE Meses INT;
     SET @max_ID = 0;
@@ -540,11 +563,44 @@ BEGIN
 
     IF pID_Empleado <= @max_ID THEN
         INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
-        ("FUNCION",proceso_nombre,NOW(),USER(),"Ganancias Totales de Usuario Calculado","Empleados",pID_Empleado);
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pID_Empleado);
     END IF;
 
     RETURN Total;
 END//
 -- SELECT CalcularGananciasEmpleado (1);
 
+-- 20. Obtener nombre de recursos segun ID.
+
+CREATE FUNCTION ObtenerTipoRecurso(pRecurso_ID INT)
+RETURNS VARCHAR(50)
+READS SQL DATA
+BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ObtenerTipoRecurso';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Tipos_Recursos';
+    DECLARE Detalle TEXT DEFAULT 'Obtenido Tipo de Recurso.';
+    DECLARE Nombre_ VARCHAR(50);
+    SET @max_ID = 0;
+
+    SELECT
+        Tipo INTO Nombre_
+    FROM
+        Tipos_Recursos
+    WHERE
+        ID = pRecurso_ID;
+
+    SELECT
+        MAX(R.ID) INTO @max_ID
+    FROM
+        Tipos_Recursos R;
+
+    IF pRecurso_ID <= @max_ID THEN
+        INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pRecurso_ID);
+    END IF;
+
+    RETURN Nombre_;
+END //
+
+select ObtenerTipoRecurso(2);
 DELIMITER;
