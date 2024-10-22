@@ -8,6 +8,24 @@ CREATE PROCEDURE InsertarClinte (IN Nombre VARCHAR(50),IN Apellido VARCHAR(50), 
 BEGIN
     INSERT INTO Clientes (Nombre, Apellido, Fecha_Nacimiento, Telefono, ID_Descuento, ID_Estado, ID_Ciudad)
     VALUES (Nombre, Apellido, FechaNacimiento, Telefono, ID_Descuento, ID_Estado, ID_Ciudad);
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "PROCEDIMIENTO",
+            "InsertarClinte",
+            NOW(),
+            USER(),
+            "Se creo un nuevo cliente",
+            "Clientes"
+        );
 END//
 -- CALL InsertarClinte('Edgan','Quintero','1970-12-01',30119072312,4,2,17);
 -- By @JavierEAcevedoN
@@ -25,6 +43,26 @@ BEGIN
     ID_Estado = ID_Estado,
     ID_Ciudad = ID_Ciudad
     WHERE ID = ID_Cliente;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada,
+        ID_Referencia
+        ) 
+        VALUES
+        (
+            "PROCEDIMIENTO",
+            "ActualizarCliente",
+            NOW(),
+            USER(),
+            "Se actualizo la informacion del cliente",
+            "Clientes",
+            ID_Cliente
+        );
 END//
 -- CALL ActualizarCliente(47,'Edgan','Quintero','1970-12-01',30119072312,4,2,17);
 -- By @JavierEAcevedoN
@@ -34,6 +72,26 @@ END//
 CREATE PROCEDURE EliminarCliente (IN ID_Cliente INT)
 BEGIN
     DELETE FROM Clientes WHERE ID = ID_Cliente;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada,
+        ID_Referencia
+        ) 
+        VALUES
+        (
+            "PROCEDIMIENTO",
+            "EliminarCliente",
+            NOW(),
+            USER(),
+            "Se elimino el cliente",
+            "Clientes",
+            ID_Cliente
+        );
 END//
 -- CALL EliminarCliente(51);
 -- By @JavierEAcevedoN
@@ -44,6 +102,24 @@ CREATE PROCEDURE InsertarProducto (IN Nombre VARCHAR(50), IN Stock INT, IN Valor
 BEGIN
     INSERT INTO Productos (Nombre, Stock, Valor, Costo, ID_Descuento, ID_Estado, ID_Tipo_Producto, ID_Lote, ID_Recurso)
     VALUES (Nombre, Stock, Valor, Costo, ID_Descuento, ID_Estado, ID_Tipo_Producto, ID_Lote, ID_Recurso);
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "PROCEDIMIENTO",
+            "InsertarProducto",
+            NOW(),
+            USER(),
+            "Se agrego un nuevo producto",
+            "Producto"
+        );
 END//
 -- CALL InsertarProducto ('Cookie', 45,42.35,24.99,1,1,12,16,42);
 -- By @JavierEAcevedoN
@@ -63,6 +139,26 @@ BEGIN
     ID_Lote = ID_Lote,
     ID_Recurso = ID_Recurso
     WHERE ID = ID_Producto;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada,
+        `ID_Referencia`
+        ) 
+        VALUES
+        (
+            "PROCEDIMIENTO",
+            "ActualizarProducto",
+            NOW(),
+            USER(),
+            "Se actualizo la informacion del producto",
+            "Producto",
+            ID_Producto
+        );
 END//
 -- CALL ActualizarProducto (52,'Cookie',45,42.35,24.99,1,1,12,16,42);
 -- By @JavierEAcevedoN
@@ -80,6 +176,24 @@ BEGIN
     FROM Productos pr
     INNER JOIN Tipos_Productos tp ON pr.ID_Tipo_Producto = tp.ID
     WHERE tp.Tipo = TipoProducto;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "PROCEDIMIENTO",
+            "ObtenerPorTipoProducto",
+            NOW(),
+            USER(),
+            "Se utilizo el procedimiento para mostrar los productos que tiene un tipo especifico",
+            "Producto"
+        );
 END//
 -- CALL ObtenerPorTipoProducto("Carne");
 -- By @JavierEAcevedoN
@@ -90,6 +204,24 @@ CREATE PROCEDURE InsesrtarVenta (IN Fecha DATE, IN Total DECIMAL(9,2), IN ID_Cli
 BEGIN
     INSERT INTO Ventas (Fecha, Total, ID_Cliente, ID_Empleado, ID_Medio_de_Pago)
     VALUES (Fecha, Total, ID_Cliente, ID_Empleado, ID_Medio_de_Pago);
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "PROCEDIMIENTO",
+            "InsesrtarVenta",
+            NOW(),
+            USER(),
+            "Se agrego una nueva venta",
+            "Venta"
+        );
 END//
 -- CALL InsesrtarVenta (DATE(NOW()),122.75,43,45,6);
 -- By @JavierEAcevedoN
@@ -108,6 +240,26 @@ BEGIN
     INNER JOIN Detalles_Ventas dv ON ve.ID = dv.ID_Venta
     INNER JOIN Productos pr ON dv.ID_Producto = pr.ID
     WHERE ve.ID_Cliente = ID_Cliente;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada,
+        `ID_Referencia`
+        ) 
+        VALUES
+        (
+            "PROCEDIMIENTO",
+            "ObtenerVentasCliente",
+            NOW(),
+            USER(),
+            "Se utilizo el procedimiento para mostrar las ventas de un cliente especifico",
+            "Cliente",
+            ID_Cliente
+        );
 END//
 -- CALL ObtenerVentasCliente(1);
 -- By @JavierEAcevedoN
@@ -127,6 +279,26 @@ BEGIN
     INNER JOIN Clientes cl ON ve.ID_Cliente = cl.ID
     INNER JOIN Medios_de_Pago mp ON ve.ID_Medio_de_Pago = mp.ID
     WHERE ve.ID_Empleado = ID_Empleado;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada,
+        `ID_Referencia`
+        ) 
+        VALUES
+        (
+            "PROCEDIMIENTO",
+            "ObtenerVentasEmpleado",
+            NOW(),
+            USER(),
+            "Se utilizo el procedimiento para mostrar las ventas de un empleado especifico",
+            "Empleado",
+            ID_Empleado
+        );
 END//
 
 -- CALL ObtenerVentasEmpleado(1);
@@ -138,6 +310,24 @@ CREATE PROCEDURE InsetarTipoProducto (IN TipoProducto VARCHAR(50))
 BEGIN
     INSERT INTO Tipos_Productos (Tipo)
     VALUES (TipoProducto);
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "PROCEDIMIENTO",
+            "InsetarTipoProducto",
+            NOW(),
+            USER(),
+            "Se agrego un nuevo tipo de producto",
+            "Tipos_Productos"
+        );
 END//
 -- CALL InsetarTipoProducto ("Cookie");
 -- By @JavierEAcevedoN
