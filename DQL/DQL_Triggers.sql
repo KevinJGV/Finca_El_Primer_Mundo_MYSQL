@@ -253,28 +253,46 @@ END//
 INSERT INTO Detalles_Ventas (Cantidad,Subtotal,ID_Venta,ID_Producto) VALUES (1,432.93,32,1);
 -- By @JavierEAcevedoN
 
--- 11. Actualizar la fecha de modificación en la tabla de productos.
+-- 11. Calcular el costo de Recursos en Stock.
 
-CREATE TRIGGER nombretrigger
-AFTER|BEFORE INSERT|UPDATE|DELETE ON nombretabla FOR EACH ROW
+CREATE TRIGGER CalcularCostoRecursos
+BEFORE UPDATE ON Recursos FOR EACH ROW
 BEGIN
-    -- CODE
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'CalcularCostoRecursos';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Recursos';
+    DECLARE Detalle TEXT DEFAULT 'Costo de recurso calculado';
+    DECLARE pUnitario DECIMAL(9,2) DEFAULT 0;
+
+    SET pUnitario = ObtenerPrecioUnitario(NEW.ID);
+
+    SET NEW.Costo = pUnitario * NEW.Stock;
+
+    INSERT INTO Logs (Tipo_Actividad,Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+    ('TRIGGER',proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,NEW.ID);
 END//
 
 -- 12. Prevenir la eliminación de un cliente si tiene ventas.
 
-CREATE TRIGGER nombretrigger
-AFTER|BEFORE INSERT|UPDATE|DELETE ON nombretabla FOR EACH ROW
+CREATE TRIGGER PrevenirCambioEstadoClienteConVentas
+BEFORE UPDATE ON Clientes FOR EACH ROW
 BEGIN
-    -- CODE
+    IF NumeroVentasCliente(OLD.ID) > 0 AND OLD.ID_Estado = 2 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: No es posible Eliminar a un usuario con Ventas registradas';
+    END IF;
 END//
 
--- 13. Actualizar el contador de ventas en la tabla de empleados.
+-- 13. Registrar las ventas en los logs.
 
-CREATE TRIGGER nombretrigger
-AFTER|BEFORE INSERT|UPDATE|DELETE ON nombretabla FOR EACH ROW
+CREATE TRIGGER RegistroVentaLog
+AFTER INSERT ON Ventas FOR EACH ROW
 BEGIN
-    -- CODE
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'RegistroVentaLog';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Ventas';
+    DECLARE Detalle TEXT DEFAULT 'Venta registrada';
+
+    INSERT INTO Logs (Tipo_Actividad,Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+    ('TRIGGER',proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,NEW.ID);
 END//
 
 -- 14. Reajustar el stock de recursos de tipo semilla, insumo quimico, riego, material de construccion, energia si tiene un estado diferente a 'activo'.

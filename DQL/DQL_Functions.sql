@@ -1,6 +1,7 @@
 USE Finca_El_Primer_Mundo;
 
 DELIMITER //
+
 -- 1. Obtener el nombre completo del cliente.
 -- Obtiene el nombre completo del cliente por medio de su ID.
 CREATE FUNCTION NombreCompletoCliente(ID_Cliente INT)
@@ -781,5 +782,113 @@ BEGIN
     RETURN Nombre_;
 END //
 -- SELECT ObtenerTipoRecurso(2);
+-- 22. Obtener el número de ventas realizadas por un cliente.
+CREATE FUNCTION NumeroVentasCliente(pCliente_ID INT)
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'NumeroVentasCliente';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Clientes';
+    DECLARE Detalle TEXT DEFAULT 'Numero de ventas por Cliente Obtenido';
+    DECLARE Nombre_ VARCHAR(50);
+    DECLARE Total INT;
+    SET @max_ID = 0;
+
+    SELECT
+        COUNT(ID) INTO Total
+    FROM Ventas
+    WHERE ID_Cliente = pCliente_ID;
+
+    SELECT
+        MAX(ID) INTO @max_ID
+    FROM
+        Clientes;
+
+    IF pCliente_ID <= @max_ID THEN
+        INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pCliente_ID);
+    END IF;
+
+    RETURN Total;
+END//
+
+-- 23. Obtener el precio unitario de un recurso
+CREATE FUNCTION ObtenerPrecioUnitario(pRecurso_ID INT)
+RETURNS DECIMAL(9,2)
+READS SQL DATA
+BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ObtenerPrecioUnitario';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Recursos';
+    DECLARE Detalle TEXT DEFAULT 'Valor unitario de recurso Obtenido';
+    DECLARE Valor DECIMAL(9,2);
+    SET @max_ID = 0;
+
+    SELECT
+        Precio_Unitario INTO Valor
+    FROM
+        Detalles_Compras
+    WHERE
+        ID_Recurso = pRecurso_ID
+    ORDER BY
+        Valor DESC
+    LIMIT 1;
+
+    SELECT
+        MAX(ID) INTO @max_ID
+    FROM
+        Recursos;
+
+    IF pRecurso_ID <= @max_ID THEN
+        INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pRecurso_ID);
+    END IF;
+
+    RETURN Valor;
+END //
+
+-- 24. Obtener antiguedad de cliente
+CREATE FUNCTION AntiguedadCliente(pClientes_ID INT)
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'AntiguedadCliente';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Ventas';
+    DECLARE Detalle TEXT DEFAULT 'Fecha de antiguedad segun Cliente Obtenida';
+    DECLARE Fecha_ DATE;
+    DECLARE Meses INT;
+    SET @max_ID = 0;
+
+    SELECT
+        MAX(Fecha) INTO Fecha_
+    FROM
+        Logs
+    WHERE
+        Detalles = "Cliente Activado" AND ID_Referencia = pClientes_ID;
+
+    IF Fecha_ IS NULL THEN
+        SELECT
+            MIN(Fecha) INTO Fecha_
+        FROM
+            Ventas
+        WHERE
+            ID_Cliente = pClientes_ID;
+    END IF;
+
+    IF Fecha_ IS NOT NULL THEN
+        SET Meses = TIMESTAMPDIFF(MONTH, Fecha_, NOW());
+    END IF;
+
+    SELECT
+        MAX(ID) INTO @max_ID
+    FROM
+        Clientes;
+
+    IF pClientes_ID <= @max_ID THEN
+        INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pClientes_ID);
+    END IF;
+
+    RETURN Meses;
+END //
 
 DELIMITER;
