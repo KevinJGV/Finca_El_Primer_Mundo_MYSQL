@@ -175,11 +175,18 @@ DO
 
 -- 20. revisar los descuentos aplicados
 
-CREATE EVENT nombreevento
-ON SCHEDULE EVERY numero intervalodetiempo
-STARTS fechaconhora -- opcional
-ENDS fechaconhora -- opcional
+CREATE EVENT RevisarDCTO
+ON SCHEDULE EVERY 1 DAY
+STARTS '2024-10-20 23:59:59'
 DO
-    -- CODE;
-
+BEGIN
+    SELECT
+        TIMESTAMPDIFF(MONTH,MIN(V.Fecha),NOW()) AS Meses
+    FROM
+        Ventas
+END //
+SELECT
+        TIMESTAMPDIFF(MONTH,MIN(V.Fecha),NOW()) AS Meses
+    FROM
+        Ventas V;
 DELIMITER ;

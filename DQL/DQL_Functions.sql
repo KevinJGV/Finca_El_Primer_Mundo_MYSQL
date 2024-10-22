@@ -475,7 +475,7 @@ END//
 
 SELECT CalcularGananciasEmpleado (1);
 
--- 20. Obtener nombre de recursos segun ID.
+-- 21. Obtener nombre de recursos segun ID.
 
 CREATE FUNCTION ObtenerTipoRecurso(pRecurso_ID INT)
 RETURNS VARCHAR(50)
@@ -508,4 +508,67 @@ BEGIN
 END //
 
 select ObtenerTipoRecurso(2);
+
+-- 22. Obtener el número de ventas realizadas por un cliente.
+CREATE FUNCTION NumeroVentasCliente(pCliente_ID INT)
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'NumeroVentasCliente';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Clientes';
+    DECLARE Detalle TEXT DEFAULT 'Numero de ventas por Cliente Obtenido';
+    DECLARE Nombre_ VARCHAR(50);
+    DECLARE Total INT;
+    SET @max_ID = 0;
+
+    SELECT
+        COUNT(ID) INTO Total
+    FROM Ventas
+    WHERE ID_Cliente = pCliente_ID;
+
+    SELECT
+        MAX(ID) INTO @max_ID
+    FROM
+        Clientes;
+
+    IF pCliente_ID <= @max_ID THEN
+        INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pCliente_ID);
+    END IF;
+
+    RETURN Total;
+END//
+
+CREATE FUNCTION ObtenerPrecioUnitario(pRecurso_ID INT)
+RETURNS DECIMAL(9,2)
+READS SQL DATA
+BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ObtenerPrecioUnitario';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Recursos';
+    DECLARE Detalle TEXT DEFAULT 'Valor unitario de recurso Obtenido';
+    DECLARE Valor DECIMAL(9,2);
+    SET @max_ID = 0;
+
+    SELECT
+        Precio_Unitario INTO Valor
+    FROM
+        Detalles_Compras
+    WHERE
+        ID_Recurso = pRecurso_ID
+    ORDER BY
+        Valor DESC
+    LIMIT 1;
+
+    SELECT
+        MAX(ID) INTO @max_ID
+    FROM
+        Recursos;
+
+    IF pRecurso_ID <= @max_ID THEN
+        INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pRecurso_ID);
+    END IF;
+
+    RETURN Valor;
+END //
 DELIMITER;
