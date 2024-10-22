@@ -539,6 +539,7 @@ BEGIN
     RETURN Total;
 END//
 
+-- 23. Obtener el precio unitario de un recurso
 CREATE FUNCTION ObtenerPrecioUnitario(pRecurso_ID INT)
 RETURNS DECIMAL(9,2)
 READS SQL DATA
@@ -570,5 +571,50 @@ BEGIN
     END IF;
 
     RETURN Valor;
+END //
+
+-- 24. Obtener antiguedad de cliente
+CREATE FUNCTION AntiguedadCliente(pClientes_ID INT)
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'AntiguedadCliente';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Ventas';
+    DECLARE Detalle TEXT DEFAULT 'Fecha de antiguedad segun Cliente Obtenida';
+    DECLARE Fecha_ DATE;
+    DECLARE Meses INT;
+    SET @max_ID = 0;
+
+    SELECT
+        MAX(Fecha) INTO Fecha_
+    FROM
+        Logs
+    WHERE
+        Detalles = "Cliente Activado" AND ID_Referencia = pClientes_ID;
+
+    IF Fecha_ IS NULL THEN
+        SELECT
+            MIN(Fecha) INTO Fecha_
+        FROM
+            Ventas
+        WHERE
+            ID_Cliente = pClientes_ID;
+    END IF;
+
+    IF Fecha_ IS NOT NULL THEN
+        SET Meses = TIMESTAMPDIFF(MONTH, Fecha_, NOW());
+    END IF;
+
+    SELECT
+        MAX(ID) INTO @max_ID
+    FROM
+        Clientes;
+
+    IF pClientes_ID <= @max_ID THEN
+        INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pClientes_ID);
+    END IF;
+
+    RETURN Meses;
 END //
 DELIMITER;
