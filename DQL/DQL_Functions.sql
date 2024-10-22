@@ -617,4 +617,102 @@ BEGIN
 
     RETURN Meses;
 END //
+
+-- 25. Obtener ultima venta de un cliente
+
+CREATE FUNCTION FechaUltimaVentaCliente(pCliente_ID INT)
+RETURNS DATE
+READS SQL DATA
+BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'FechaUltimaVentaCliente';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Venta';
+    DECLARE Detalle TEXT DEFAULT 'Fecha de Ultima Venta segun Cliente Obtenida';
+    DECLARE Fecha_ DATE;
+    SET @max_ID = 0;
+
+    SELECT
+        MAX(Fecha) INTO Fecha_
+    FROM
+        Ventas
+    WHERE
+        ID_Cliente = pCliente_ID;
+
+    SELECT
+        MAX(ID) INTO @max_ID
+    FROM
+        Clientes;
+
+    IF pCliente_ID <= @max_ID THEN
+        INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pCliente_ID);
+    END IF;
+
+    RETURN Fecha_;
+END //
+
+-- 26. Obtener el id tipo de empleado
+CREATE FUNCTION ObtenerTipoEmpledo(pEmpleado_ID INT)
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ObtenerTipoEmpledo';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Empleado';
+    DECLARE Detalle TEXT DEFAULT 'Tipo de empleado Obtenido';
+    DECLARE Tipo_ INT;
+
+    SELECT
+        ID_Tipo_Empleado INTO Tipo_
+    FROM
+        Empleados
+    WHERE
+        ID = pEmpleado_ID;
+    
+    SELECT
+        MAX(ID) INTO @max_ID
+    FROM
+        Empleados;
+
+    IF pEmpleado_ID <= @max_ID THEN
+        INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pEmpleado_ID);
+    END IF;
+
+    RETURN Tipo_;
+END //
+
+-- 27. Calcular el porcentaje de compras de un cliente.
+DELIMITER //
+CREATE FUNCTION PorcentajeComprasxCliente(pCliente_ID INT)
+RETURNS DECIMAL(3,1)
+READS SQL DATA
+BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'PorcentajeComprasxCliente';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT "Ventas";
+    DECLARE Detalle TEXT DEFAULT 'Porcentaje de Compras por Cliente Obtenido';
+    DECLARE Porcentaje DECIMAL(3,1);
+    DECLARE TOTAL_V INT;
+    SET @max_ID = 0;
+
+    SELECT
+        COUNT(ID) INTO TOTAL_V
+    FROM
+        Ventas;
+    
+    SELECT
+        ((COUNT(ID) / TOTAL_V) * 100) INTO Porcentaje
+    FROM
+        Ventas
+    WHERE
+        ID_Cliente = pCliente_ID;
+
+    SELECT
+        MAX(C.ID) INTO @max_ID
+    FROM Clientes C;
+
+    IF pCliente_ID <= @max_ID THEN
+        INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+        ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pCliente_ID);
+    END IF;
+    RETURN Porcentaje;
+END//
 DELIMITER;

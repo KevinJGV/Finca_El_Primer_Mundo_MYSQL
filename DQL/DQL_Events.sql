@@ -142,51 +142,132 @@ DO
 BEGIN
 END//
 
--- 15. Enviar informes de ventas a los gerentes.
+-- 15. Enviar informes de ventas anuales a los gerentes.
 
-CREATE EVENT nombreevento
-ON SCHEDULE EVERY numero intervalodetiempo
-STARTS fechaconhora -- opcional
-ENDS fechaconhora -- opcional
+CREATE EVENT ResultadosAnuales
+ON SCHEDULE EVERY 1 YEAR
 DO
 BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ResultadosAnuales';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Ventas';
+    DECLARE Detalle TEXT DEFAULT 'Informe anual de ventas';
+    DECLARE 
+    
+    INSERT Resultados_Anuales(Tabla_Nombre,Nombre_Resultado,Fecha_Resultado,Descripcion,Resultado)
+    SE
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
+    ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
 END//
 
 -- 16. Realizar auditorías mensuales de clientes.
 
-CREATE EVENT nombreevento
-ON SCHEDULE EVERY numero intervalodetiempo
-STARTS fechaconhora -- opcional
-ENDS fechaconhora -- opcional
+CREATE EVENT AuditoriaCompras
+ON SCHEDULE EVERY 1 MONTH
 DO
 BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'AuditoriaCompras';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Clientes';
+    DECLARE Detalle TEXT DEFAULT 'Compras Cliente Calculado (Cantidad de ventas)';
+    DECLARE pCliente_ID INT;
+    DECLARE Compras DECIMAL(9,2);
+    DECLARE fin INT;
+    DECLARE cursor_clientes CURSOR FOR SELECT ID FROM Clientes;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET fin = 1;
+
+    OPEN cursor_clientes;
+        clientes_loop: LOOP
+            FETCH cursor_clientes INTO pCliente_ID;
+            IF fin THEN
+                LEAVE clientes_loop;
+            END IF;
+
+            SET Compras = PorcentajeComprasxCliente(pCliente_ID);
+
+            INSERT INTO Resultados_Mensuales(Tabla_Nombre,ID_Referencia,Nombre_Resultado,Fecha_Resultado,Descripcion,Resultado) VALUES
+            (tabla_nombre,pCliente_ID, "Compras Mensual", NOW(),"Valor porcentual respecto a las ventas totales", Compras);
+
+            INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+            ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pCliente_ID);
+        END LOOP;
+    CLOSE cursor_clientes;
 END//
 
 -- 17. Evaluar el rendimiento de los empleados.
 
-CREATE EVENT nombreevento
-ON SCHEDULE EVERY numero intervalodetiempo
-STARTS fechaconhora -- opcional
-ENDS fechaconhora -- opcional
+CREATE EVENT RendimientoEmpleados
+ON SCHEDULE EVERY 1 MONTH
 DO
 BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'RendimientoEmpleados';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Empleados';
+    DECLARE Detalle TEXT DEFAULT 'Rendimiento Empleado Calculado (Cantidad de ventas)';
+    DECLARE pEmpleado_ID INT;
+    DECLARE Rendimiento DECIMAL(9,2);
+    DECLARE fin INT;
+    DECLARE cursor_empleados CURSOR FOR SELECT ID FROM Empleados;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET fin = 1;
+
+    OPEN cursor_empleados;
+        empleados_loop: LOOP
+            FETCH cursor_empleados INTO pEmpleado_ID;
+            IF fin THEN
+                LEAVE empleados_loop;
+            END IF;
+
+            SET Rendimiento = PorcentajeVentasxEmpleado(pEmpleado_ID);
+            IF ObtenerTipoEmpledo(pEmpleado_ID) = 2 THEN
+                INSERT INTO Resultados_Mensuales(Tabla_Nombre,ID_Referencia,Nombre_Resultado,Fecha_Resultado,Descripcion,Resultado) VALUES
+                (tabla_nombre,pEmpleado_ID, "Rendimiento Mensual", NOW(),"Valor porcentual respecto a las ventas totales", Rendimiento);
+            END IF;
+
+            INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+            ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pEmpleado_ID);
+        END LOOP;
+    CLOSE cursor_empleados;
 END//
 
 -- 18. Actualizar el estado de clientes inactivos.
 
-CREATE EVENT nombreevento
-ON SCHEDULE EVERY numero intervalodetiempo
-STARTS fechaconhora -- opcional
-ENDS fechaconhora -- opcional
+CREATE EVENT ActivarClientes
+ON SCHEDULE EVERY 1 DAY
 DO
 BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ActivarClientes';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Clientes';
+    DECLARE Detalle TEXT DEFAULT 'Cliente Activado';
+
+    DECLARE pCliente_ID INT;
+    DECLARE NEW_STATUS INT;
+    DECLARE MAX_DATE DATE;
+    DECLARE fin INT;
+    DECLARE cursor_cliente CURSOR FOR SELECT ID FROM Clientes;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET fin = 1;
+
+    OPEN cursor_cliente;
+        clientes_loop: LOOP
+            FETCH cursor_cliente INTO pCliente_ID;
+            IF fin THEN
+                LEAVE clientes_loop;
+            END IF;
+
+            SET MAX_DATE = FechaUltimaVentaCliente(pCliente_ID);
+
+            IF TIMESTAMPDIFF(YEAR,CURDATE(),MAX_DATE) <= 1 THEN
+                UPDATE Clientes
+                SET ID_Estado = 1
+                WHERE ID = pCliente_ID;
+            END IF;
+
+            INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+            ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pProducto_ID);
+        END LOOP;
+    CLOSE cursor_cliente;
 END//
 
 -- 19. Ajustar descuento de productos automáticamente segun un criterio especifico.
 
 CREATE EVENT DCTOsegunProductoyDia
 ON SCHEDULE EVERY 1 DAY
-STARTS '2024-10-20 00:00:00'
 DO
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'DCTOsegunProductoyDia';
@@ -194,25 +275,25 @@ BEGIN
     DECLARE Detalle TEXT DEFAULT 'Descuento de Producto Revisado';
 
     DECLARE pProducto_ID INT;
-    DECLARE tipo INT;
+    DECLARE Tipo INT;
     DECLARE DCTO INT DEFAULT 5;
     DECLARE NEW_DCTO INT;
     DECLARE Dia VARCHAR(20);
+    DECLARE fin INT DEFAULT 0;
+    DECLARE cursor_producto CURSOR FOR SELECT ID FROM Productos; 
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET fin = 1;
 
     SET Dia = DAYNAME(CURDATE());
-
-    DECLARE fin INT DEFAULT 0;
-    DECLARE cursor_producto CURSOR SELECT ID FROM Productos;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET fin = 1;
 
     OPEN cursor_producto;
 
         producto_loop: LOOP
-            IF fin THEN
-                LEAVE cursor_loop:
-            END IF;
 
             FETCH cursor_producto INTO pProducto_ID;
+
+            IF fin THEN
+                LEAVE producto_loop;
+            END IF;
 
             SELECT
                 ID_Tipo_Producto INTO Tipo
@@ -236,7 +317,6 @@ END//
 -- 20. revisar los descuentos aplicados a Clientes
 CREATE EVENT RevisarDCTO
 ON SCHEDULE EVERY 1 DAY
-STARTS '2024-10-20 00:00:00'
 DO
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'RevisarDCTO';
@@ -298,24 +378,4 @@ BEGIN
     INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
     ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
 END //
-
-DROP EVENT RevisarDCTO
 DELIMITER ;
-
-SELECT 
-    EVENT_SCHEMA AS Base_De_Datos,
-    EVENT_NAME AS Nombre_Evento,
-    EVENT_DEFINITION AS Definicion,
-    EVENT_TYPE AS Tipo_Evento,
-    EXECUTE_AT AS Fecha_Ejecucion_Unica,
-    INTERVAL_VALUE AS Valor_Intervalo,
-    INTERVAL_FIELD AS Unidad_Intervalo,
-    STARTS AS Fecha_Inicio,
-    ENDS AS Fecha_Finalizacion,
-    STATUS AS Estado,
-    LAST_EXECUTED AS Ultima_Ejecucion,
-    ON_COMPLETION AS Comportamiento_Despues
-FROM 
-    information_schema.EVENTS
-WHERE 
-    EVENT_SCHEMA = 'finca_el_primer_mundo';

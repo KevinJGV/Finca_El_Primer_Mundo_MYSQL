@@ -251,3 +251,25 @@ CREATE TABLE
         Tabla_Afectada VARCHAR(50) NOT NULL,
         ID_Referencia INT
     );
+
+CREATE TABLE
+    Resultados_Mensuales (
+        ID INT PRIMARY KEY AUTO_INCREMENT,
+        Tabla_Nombre VARCHAR(50) NOT NULL,
+        ID_Referencia INT,
+        Nombre_Resultado VARCHAR(50) NOT NULL,
+        Fecha_Resultado DATETIME NOT NULL,
+        Descripcion VARCHAR(100) NOT NULL,
+        Resultado DECIMAL(9,2) NOT NULL
+    );
+
+CREATE TABLE
+    Resultados_Anuales (
+        ID INT PRIMARY KEY AUTO_INCREMENT,
+        Tabla_Nombre VARCHAR(50) NOT NULL,
+        ID_Referencia INT,
+        Nombre_Resultado VARCHAR(50) NOT NULL,
+        Fecha_Resultado DATETIME NOT NULL,
+        Descripcion VARCHAR(100) NOT NULL,
+        Resultado DECIMAL(9,2) NOT NULL
+    );
