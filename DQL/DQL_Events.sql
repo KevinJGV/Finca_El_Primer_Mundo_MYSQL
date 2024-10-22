@@ -491,24 +491,6 @@ BEGIN
 
     INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
     ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
-END //
+END //    
 
-SELECT 
-    EVENT_SCHEMA AS Base_De_Datos,
-    EVENT_NAME AS Nombre_Evento,
-    EVENT_DEFINITION AS Definicion,
-    EVENT_TYPE AS Tipo_Evento,
-    EXECUTE_AT AS Fecha_Ejecucion_Unica,
-    INTERVAL_VALUE AS Valor_Intervalo,
-    INTERVAL_FIELD AS Unidad_Intervalo,
-    STARTS AS Fecha_Inicio,
-    ENDS AS Fecha_Finalizacion,
-    STATUS AS Estado,
-    LAST_EXECUTED AS Ultima_Ejecucion,
-    ON_COMPLETION AS Comportamiento_Despues
-FROM 
-    information_schema.EVENTS
-WHERE 
-    EVENT_SCHEMA = 'finca_el_primer_mundo';
-    
 DELIMITER ;
