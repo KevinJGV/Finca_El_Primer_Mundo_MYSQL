@@ -266,7 +266,7 @@ CREATE TABLE
         Fecha DATETIME NOT NULL,
         Usuario_Ejecutor VARCHAR(50),
         Detalles TEXT NOT NULL,
-        Tabla_Afectada VARCHAR(50) NOT NULL,
+        Tabla_Afectada VARCHAR(50),
         ID_Referencia INT
     );
 

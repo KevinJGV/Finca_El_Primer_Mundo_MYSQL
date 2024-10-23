@@ -407,8 +407,9 @@ END//
 -- 16. Realizar auditorías mensuales de clientes.
 -- Audita mensualmente el porcentaje de compras de los clientes en relación con las ventas totales.
 -- By @KevinGV
+DELIMITER //
 CREATE EVENT AuditoriaCompras
-ON SCHEDULE EVERY 1 MONTH
+ON SCHEDULE EVERY 10 SECOND
 DO
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'AuditoriaCompras';
@@ -416,27 +417,27 @@ BEGIN
     DECLARE Detalle TEXT DEFAULT 'Compras Cliente Calculado (Cantidad de ventas)';
     DECLARE pCliente_ID INT;
     DECLARE Compras DECIMAL(9,2);
-    DECLARE fin INT;
+    DECLARE fin INT DEFAULT 0;
     DECLARE cursor_clientes CURSOR FOR SELECT ID FROM Clientes;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET fin = 1;
 
     OPEN cursor_clientes;
-        clientes_loop: LOOP
-            FETCH cursor_clientes INTO pCliente_ID;
-            IF fin THEN
-                LEAVE clientes_loop;
-            END IF;
+    clientes_loop: LOOP
+        FETCH cursor_clientes INTO pCliente_ID;
+        IF fin THEN
+            LEAVE clientes_loop;
+        END IF;
 
-            SET Compras = PorcentajeComprasxCliente(pCliente_ID);
+        SET Compras = PorcentajeComprasxCliente(pCliente_ID);
 
-            INSERT INTO Resultados_Mensuales(Tabla_Nombre,ID_Referencia,Nombre_Resultado,Fecha_Resultado,Descripcion,Resultado) VALUES
-            (tabla_nombre,pCliente_ID, "Compras Mensual", NOW(),"Valor porcentual respecto a las ventas totales", Compras);
+        INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad, Fecha, Usuario_Ejecutor, Detalles, Tabla_Afectada, ID_Referencia) 
+        VALUES ('EVENTO', proceso_nombre, NOW(), USER(), Detalle, tabla_nombre, pCliente_ID);
 
-            INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
-            ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pCliente_ID);
-        END LOOP;
+        CALL ReporteMensual(pCliente_ID, 'Compras Mensual', NOW(), 'Valor porcentual respecto a las ventas totales', Compras);
+    END LOOP;
     CLOSE cursor_clientes;
 END//
+
 
 -- 17. Evaluar el rendimiento de los empleados.
 -- Calcula mensualmente el porcentaje de ventas realizado por cada empleado.

@@ -960,6 +960,7 @@ END //
 
 -- 27. Calcular el porcentaje de compras de un cliente.
 -- By @KevinGV
+DELIMITER //
 CREATE FUNCTION PorcentajeComprasxCliente(pCliente_ID INT)
 RETURNS DECIMAL(3,1)
 READS SQL DATA

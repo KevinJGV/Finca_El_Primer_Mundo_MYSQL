@@ -369,27 +369,73 @@ BEGIN
 END//
 
 -- 17. Obtener productos por precio mínimo y máximo.
-CREATE PROCEDURE nombreprocedimiento (IN parametro INT)
+CREATE PROCEDURE ProductosEntreValores (IN pRango_inicial INT, IN pRango_final INT)
 BEGIN
-    -- CODE
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ProductosEntreValores';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Productos';
+    DECLARE Detalle TEXT DEFAULT 'Productos en un rango de Precios obtenido';
+
+    SELECT
+        *
+    FROM
+        Productos
+    WHERE
+        Valor BETWEEN pRango_inicial AND pRango_final;
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
+    ("PROCEDIMIENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
 END//
 
 -- 18. Obtener ventas por rango de fechas.
-CREATE PROCEDURE nombreprocedimiento (IN parametro INT)
+CREATE PROCEDURE VentasEntreFechas (IN pFecha_inicial DATE, IN pFecha_final DATE)
 BEGIN
-    -- CODE
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'VentasEntreFechas';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Ventas';
+    DECLARE Detalle TEXT DEFAULT 'Ventas en un rango de fechas obtenido';
+
+    SELECT
+        *
+    FROM
+        Ventas
+    WHERE
+        Fecha BETWEEN pFecha_inicial AND pFecha_final;
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
+    ("PROCEDIMIENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
 END//
 
 -- 19. Obtener cantidad total de productos vendidos por categoría.
-CREATE PROCEDURE nombreprocedimiento (IN parametro INT)
+CREATE PROCEDURE CantidadVentasxTipo()
 BEGIN
-    -- CODE
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'CantidadVentasxTipo';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Detalles_Ventas';
+    DECLARE Detalle TEXT DEFAULT 'Productos Vendidos por tipo obtenido';
+
+    Select
+        SUM(DV.Cantidad) AS Vendidos,
+        TP.Tipo
+    FROM
+        Detalles_Ventas DV
+        JOIN Productos P ON DV.ID_Producto = P.ID
+        JOIN Tipos_Productos TP ON P.ID_Tipo_Producto = TP.ID
+    GROUP BY
+        TP.Tipo;
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
+    ("PROCEDIMIENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
 END//
 
--- 20. Generar reporte de ventas mensuales.
-CREATE PROCEDURE nombreprocedimiento (IN parametro INT)
+-- 20. Generar reporte de ventas mensual.
+CREATE PROCEDURE ReporteMensual (IN pReferencia_ID INT, IN Nombre_Resultado VARCHAR(50), IN Fecha_Resultado DATETIME, IN Descripcion VARCHAR(100),IN Resultado DECIMAL(9,2))
 BEGIN
-    -- CODE
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ReporteMensual';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Resultados_Mensuales';
+    DECLARE Detalle TEXT DEFAULT 'Reporte Realizado en Resultados_Mensuales';
+    INSERT INTO Resultados_Mensuales(Tabla_Nombre,ID_Referencia,Nombre_Resultado,Fecha_Resultado,Descripcion,Resultado) VALUES
+    (tabla_nombre,pReferencia_ID, Nombre_Resultado, Fecha_Resultado,Descripcion, Resultado);
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+    ("PROCEDIMIENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pReferencia_ID);
 END//
 
 DELIMITER ;

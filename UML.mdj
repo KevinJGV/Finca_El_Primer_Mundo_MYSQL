@@ -5670,7 +5670,7 @@
 									"font": "Arial;13;1",
 									"left": 3000,
 									"top": 1773,
-									"width": 177.10693359375,
+									"width": 178.53515625,
 									"height": 13,
 									"text": "Notificaciones"
 								},
@@ -5696,7 +5696,7 @@
 											"font": "Arial;13;0",
 											"left": 3005,
 											"top": 1796,
-											"width": 167.10693359375,
+											"width": 168.53515625,
 											"height": 13
 										},
 										{
@@ -5711,7 +5711,7 @@
 											"font": "Arial;13;0",
 											"left": 3005,
 											"top": 1811,
-											"width": 167.10693359375,
+											"width": 168.53515625,
 											"height": 13
 										},
 										{
@@ -5726,7 +5726,7 @@
 											"font": "Arial;13;0",
 											"left": 3005,
 											"top": 1826,
-											"width": 167.10693359375,
+											"width": 168.53515625,
 											"height": 13
 										},
 										{
@@ -5741,21 +5741,21 @@
 											"font": "Arial;13;0",
 											"left": 3005,
 											"top": 1841,
-											"width": 167.10693359375,
+											"width": 168.53515625,
 											"height": 13
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 3000,
 									"top": 1791,
-									"width": 177.10693359375,
+									"width": 178.53515625,
 									"height": 68
 								}
 							],
 							"font": "Arial;13;0",
 							"left": 3000,
 							"top": 1768,
-							"width": 177.10693359375,
+							"width": 178.53515625,
 							"height": 91,
 							"nameLabel": {
 								"$ref": "AAAAAAGSuAyiVzrIktA="
@@ -7949,7 +7949,8 @@
 							},
 							"name": "Tabla_Afectada",
 							"type": "VARCHAR",
-							"length": "50"
+							"length": "50",
+							"nullable": true
 						},
 						{
 							"_type": "ERDColumn",
