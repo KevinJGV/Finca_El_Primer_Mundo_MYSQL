@@ -514,7 +514,7 @@ INSERT INTO Recursos (Nombre, Stock, Costo, Recurso_Padre_ID, Recurso_Generador_
 ('Cosechadora', 2, 40000.00, NULL, NULL, 1, 2),
 ('Ternera', 20, 1500.00, NULL, NULL, 1, 1),
 ('Leche de cabra', 30, 250.00, NULL, NULL, 1, 1),
-('Huevo de pato', 50, 6.00, 1, NULL, 1, 1),
+('Huevo de pato', 50, 6.00, NULL, NULL, 1, 1),
 ('Maíz en grano', 300, 80.00, NULL, NULL, 1, 1),
 ('Banano', 200, 30.00, NULL, NULL, 1, 1),
 ('Lechuga romana', 150, 25.00, NULL, NULL, 1, 1),
@@ -528,7 +528,7 @@ INSERT INTO Recursos (Nombre, Stock, Costo, Recurso_Padre_ID, Recurso_Generador_
 ('Kombucha', 10, 200.00, NULL, NULL, 1, 1),
 ('Pavo', 15, 900.00, NULL, NULL, 1, 1),
 ('Yogur de frutas', 25, 100.00, NULL, NULL, 1, 1),
-('Huevo orgánico', 80, 7.00, 1, NULL, 1, 1),
+('Huevo orgánico', 80, 7.00, NULL, NULL, 1, 1),
 ('Trigo', 150, 60.00, NULL, NULL, 1, 1),
 ('Papaya', 100, 40.00, NULL, NULL, 1, 1),
 ('Espinaca', 120, 20.00, NULL, NULL, 1, 1),
@@ -969,5 +969,5 @@ INSERT INTO Empleados_Tareas (ID_Empleado, ID_Tarea) VALUES
 (24, 24),
 (25, 25);
 
-INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
-("",proceso_nombre,NOW(),USER(),"","",);
+-- INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+-- ("",proceso_nombre,NOW(),USER(),"","",);

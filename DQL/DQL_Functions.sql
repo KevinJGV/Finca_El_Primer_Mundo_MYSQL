@@ -1,99 +1,390 @@
 USE Finca_El_Primer_Mundo;
 
-DELIMITER / /
+DELIMITER //
 
 -- 1. Obtener el nombre completo del cliente.
-
-CREATE FUNCTION nombrefuncion(parametros INT)
-RETURNS INT
-DETERMINISTIC
+-- Obtiene el nombre completo del cliente por medio de su ID.
+CREATE FUNCTION NombreCompletoCliente(ID_Cliente INT)
+RETURNS VARCHAR(105)
+READS SQL DATA
 BEGIN
-    -- CODE
+    DECLARE NombreCompleto VARCHAR(105);
+
+    SELECT
+        CONCAT(Nombre," ",Apellido)
+    INTO NombreCompleto
+    FROM Clientes
+    WHERE ID = ID_Cliente;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "FUNCION",
+            "NombreCompletoCliente",
+            NOW(),
+            USER(),
+            "Se utilizo la funcion para mostrar el nombre completo de un cliente",
+            "Clientes"
+        );
+
+    RETURN NombreCompleto;
 END//
+-- SELECT NombreCompletoCliente(1);
+-- By @JavierEAcevedoN
 
 -- 2. Calcular el total de ventas de un cliente.
-
-CREATE FUNCTION nombrefuncion(parametros INT)
-RETURNS INT
-DETERMINISTIC
+-- Calcula el total de ventas que ha hecho un cliente por medio de su ID.
+CREATE FUNCTION TotalVentasCliente(ID_Cliente INT)
+RETURNS DECIMAL(9,2)
+READS SQL DATA
 BEGIN
-    -- CODE
+    DECLARE Subtotal DECIMAL(9,2);
+
+    SELECT
+        SUM(dv.Subtotal)
+    INTO Subtotal
+    FROM Ventas ve
+    INNER JOIN Detalles_Ventas dv ON ve.ID = dv.ID_Venta
+    WHERE ve.ID_Cliente = ID_Cliente
+    GROUP BY ve.ID_Cliente;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "FUNCION",
+            "TotalVentasCliente",
+            NOW(),
+            USER(),
+            "Se utilizo la funcion para calcular el total de ventas de un cliente",
+            "Ventas"
+        );
+    
+    RETURN Subtotal;
 END//
+-- SELECT TotalVentasCliente(1);
+-- By @JavierEAcevedoN
 
 -- 3. Obtener el precio de un producto.
-
-CREATE FUNCTION nombrefuncion(parametros INT)
-RETURNS INT
-DETERMINISTIC
+-- Obtiene el precio del una producto por medio de su ID.
+CREATE FUNCTION ObtenerPrecioproducto(ID_Producto INT)
+RETURNS DECIMAL(9,2)
+READS SQL DATA
 BEGIN
-    -- CODE
+    DECLARE Precio DECIMAL(9,2);
+
+    SELECT
+        Valor
+    INTO Precio
+    FROM Productos
+    WHERE ID = ID_Producto;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "FUNCION",
+            "ObtenerPrecioproducto",
+            NOW(),
+            USER(),
+            "Se utilizo la funcion para obtener el precio de un producto",
+            "Producto"
+        );
+
+    RETURN Precio;
 END//
+-- SELECT ObtenerPrecioproducto(1);
+-- By @JavierEAcevedoN
 
 -- 4. Calcular el total de productos vendidos en una venta.
-
-CREATE FUNCTION nombrefuncion(parametros INT)
-RETURNS INT
-DETERMINISTIC
+-- Calcula el total de ventas de una venta por medio de su ID.
+CREATE FUNCTION TotalProductosVenta(Venta_ID INT)
+RETURNS DECIMAL(9,2)
+READS SQL DATA
 BEGIN
-    -- CODE
+    DECLARE Total DECIMAL(9,2);
+
+    SELECT
+        SUM(Subtotal)
+    INTO Total
+    FROM Detalles_Ventas
+    WHERE ID_Venta = Venta_ID
+    GROUP BY ID_Venta;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "FUNCION",
+            "TotalProductosVenta",
+            NOW(),
+            USER(),
+            "Se utilizo la funcion para calcular el total de detalles de venta de una venta",
+            "Venta"
+        );
+
+    RETURN Total;
 END//
+-- SELECT TotalProductosVenta(2);
+-- By @JavierEAcevedoN
 
--- 5. Obtener el nombre de la categoría de un producto.
-
-CREATE FUNCTION nombrefuncion(parametros INT)
-RETURNS INT
-DETERMINISTIC
+-- 5. Obtener el nombre del tipo de un producto.
+-- Obtiene el tipo de producto por medio de su ID.
+CREATE FUNCTION ObtenerTipoProducto(ID_Producto INT)
+RETURNS VARCHAR(50)
+READS SQL DATA
 BEGIN
-    -- CODE
+    DECLARE TipoProducto VARCHAR(50);
+
+    SELECT
+        tp.Tipo
+    INTO TipoProducto
+    FROM Productos pr
+    INNER JOIN Tipos_Productos tp ON pr.ID_Tipo_Producto = tp.ID
+    WHERE pr.ID = ID_Producto;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "FUNCION",
+            "ObtenerTipoProducto",
+            NOW(),
+            USER(),
+            "Se utilizo la funcion para calcular el total de detalles de venta de una venta",
+            "Tipos_Productos"
+        );
+
+    RETURN TipoProducto;
 END//
+-- SELECT ObtenerTipoProducto(2);
+-- By @JavierEAcevedoN
 
--- 6. Calcular el descuento aplicado a una venta.
-
-CREATE FUNCTION nombrefuncion(parametros INT)
-RETURNS INT
-DETERMINISTIC
+-- 6. Calcular el descuento aplicado a un producto.
+-- Se calcula el descuento de un producto por medio de su ID.
+CREATE FUNCTION CalcularDescuentoProducto(ID_Producto INT)
+RETURNS DECIMAL(9,2)
+READS SQL DATA
 BEGIN
-    -- CODE
+    DECLARE Precio DECIMAL(9,2);
+    DECLARE Descuento DECIMAL(9,2);
+
+    SELECT
+        pr.Valor,
+        ds.Valor
+    INTO
+        Precio,
+        Descuento
+    FROM Productos pr
+    INNER JOIN Descuentos ds ON pr.ID_Descuento = ds.ID
+    WHERE pr.ID = ID_Producto;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "FUNCION",
+            "CalcularDescuentoProducto",
+            NOW(),
+            USER(),
+            "Se utilizo la funcion para calcular el descuento del precio de un producto",
+            "Productos"
+        );
+
+    RETURN (Precio - (Precio * (Descuento/100)));
 END//
+-- SELECT CalcularDescuentoProducto(8);
+-- By @JavierEAcevedoN
 
 -- 7. Obtener el empleado que realizó la venta.
-
-CREATE FUNCTION nombrefuncion(parametros INT)
-RETURNS INT
-DETERMINISTIC
+-- Se obtiene el nombre del empleado que realizo la venta, la venta se selecciona por medio de su ID.
+CREATE FUNCTION NombreEmpledoVenta(ID_Venta INT)
+RETURNS VARCHAR(105)
+READS SQL DATA
 BEGIN
-    -- CODE
+    DECLARE NombreCompleto VARCHAR(105);
+
+    SELECT
+        CONCAT(em.Nombre," ",em.Apellido)
+    INTO NombreCompleto
+    FROM Ventas ve
+    INNER JOIN Empleados em ON ve.ID_Empleado = em.ID
+    WHERE ve.ID = ID_Venta;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "FUNCION",
+            "NombreEmpledoVenta",
+            NOW(),
+            USER(),
+            "Se utilizo la funcion para obtener el nombre del empleado que hizo la venta",
+            "Empleados"
+        );
+
+    RETURN NombreCompleto;
 END//
+-- SELECT NombreEmpledoVenta(2);
+-- By @JavierEAcevedoN
 
--- 8. Calcular el precio total de un producto con impuestos.
-
-CREATE FUNCTION nombrefuncion(parametros INT)
-RETURNS INT
-DETERMINISTIC
+-- 8. Calcular el precio total de un producto si se le aplica un impuesto (19%).
+-- Se calcula el suma el impuesto del 19% al precio del producto por medio de su ID.
+CREATE FUNCTION CalcularImpuestoProducto(ID_Producto INT)
+RETURNS DECIMAL(9,2)
+READS SQL DATA
 BEGIN
-    -- CODE
+    DECLARE Precio DECIMAL(9,2);
+
+    SELECT
+        Valor
+    INTO
+        Precio
+    FROM Productos
+    WHERE ID = ID_Producto;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "FUNCION",
+            "CalcularImpuestoProducto",
+            NOW(),
+            USER(),
+            "Se utilizo la funcion para calcular el precio de un producto aplicandole el impuesto",
+            "Productos"
+        );
+
+    RETURN (Precio + (Precio * (19/100)));
 END//
+-- SELECT CalcularImpuestoProducto(43);
+-- By @JavierEAcevedoN
 
 -- 9. Obtener el número de ventas realizadas por un empleado.
-
-CREATE FUNCTION nombrefuncion(parametros INT)
+-- Calcula la cantidad de productos por un empleado pormedio de su ID.
+CREATE FUNCTION NumeroVentasEmpleado(Empleado_ID INT)
 RETURNS INT
-DETERMINISTIC
+READS SQL DATA
 BEGIN
-    -- CODE
+    DECLARE Total INT;
+
+    SELECT
+        COUNT(ID)
+    INTO Total
+    FROM Ventas
+    WHERE ID_Empleado = Empleado_ID;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "FUNCION",
+            "NumeroVentasEmpleado",
+            NOW(),
+            USER(),
+            "Se utilizo la funcion para calcular la cantidad de ventas de un empleado",
+            "Empleado"
+        );
+
+    RETURN Total;
 END//
+SELECT NumeroVentasEmpleado(1);
+-- By @JavierEAcevedoN
 
--- 10. Calcular el promedio de precios de los productos de una categoría.
-
-CREATE FUNCTION nombrefuncion(parametros INT)
-RETURNS INT
-DETERMINISTIC
+-- 10. Calcular el promedio de precios de los productos de un tipo.
+-- Se calcula el promedio de productos por medio del tipo, el tipo se selecciona por medio de nombre.
+CREATE FUNCTION PromedioProductosTipo(TipoProducto VARCHAR(50))
+RETURNS DECIMAL (9,2)
+READS SQL DATA
 BEGIN
-    -- CODE
+    DECLARE Promedio DECIMAL(9,2);
+
+    SELECT
+        AVG(pr.Valor)
+    INTO Promedio
+    FROM Productos pr
+    INNER JOIN Tipos_Productos tp ON pr.ID_Tipo_Producto = tp.ID
+    WHERE tp.Tipo = TipoProducto;
+
+    INSERT INTO Logs (
+        Tipo_Actividad,
+        Nombre_Actividad,
+        Fecha,
+        Usuario_Ejecutor,
+        Detalles,
+        Tabla_Afectada
+        ) 
+        VALUES
+        (
+            "FUNCION",
+            "PromedioProductosTipo",
+            NOW(),
+            USER(),
+            "Se utilizo la funcion para calcular el promedio del precio de productos por medio de su tipo",
+            "Empleado"
+        );
+
+    RETURN Promedio;
 END//
+-- SELECT PromedioProductosTipo("Lacteo");
+-- By @JavierEAcevedoN
 
 -- 11. Obtener el número total de clientes registrados.
-DELIMITER //
 CREATE FUNCTION TotalClientes()
 RETURNS INT
 READS SQL DATA
@@ -113,11 +404,9 @@ BEGIN
 
     RETURN Cantidad_Total;
 END//
-
-SELECT TotalClientes();
+-- SELECT TotalClientes();
 
 -- 12. Calcular el total de ingresos generados en un mes.
-DELIMITER //
 CREATE FUNCTION TotalIngresosMesYAño(pMes INT,pAño INT)
 RETURNS DECIMAL(9,2)
 READS SQL DATA
@@ -140,11 +429,9 @@ BEGIN
     END IF;
     RETURN Valor_;
 END//
-
-SELECT TotalIngresosMesYAño(11,2024);
+-- SELECT TotalIngresosMesYAño(11,2024);
 
 -- 13. Obtener el nombre completo del cliente que más ha comprado. (Según cantidad de productos)
-DELIMITER //
 CREATE FUNCTION NombreClienteMayorCompras()
 RETURNS VARCHAR(50)
 READS SQL DATA
@@ -193,11 +480,9 @@ BEGIN
     ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,ID_);
     RETURN Nombre_;
 END//
-
-SELECT NombreClienteMayorCompras();
+-- SELECT NombreClienteMayorCompras();
 
 -- 14. Calcular el monto total de una venta específica.
-DELIMITER //
 CREATE FUNCTION MontoTotalVenta(pVenta_ID INT)
 RETURNS DECIMAL(9,2)
 READS SQL DATA
@@ -226,8 +511,7 @@ BEGIN
     END IF;
     RETURN Valor_;
 END//
-
-SELECT MontoTotalVenta(10000);
+-- SELECT MontoTotalVenta(10000);
 
 -- 15. Obtener el nombre del producto más vendido.
 DELIMITER //
@@ -277,8 +561,7 @@ BEGIN
     ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,ID_);
     RETURN Nombre_;
 END//
-
-SELECT NombreProductoMasVendido();
+-- SELECT NombreProductoMasVendido();
 
 -- 16. Calcular el porcentaje de ventas de un empleado.
 DELIMITER //
@@ -315,8 +598,7 @@ BEGIN
     END IF;
     RETURN Porcentaje;
 END//
-
-SELECT PorcentajeVentasxEmpleado(1);
+-- SELECT PorcentajeVentasxEmpleado(3);
 
 -- 17. Obtener el nombre del producto más caro.
 DELIMITER //
@@ -350,10 +632,9 @@ BEGIN
     ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,ID_);
     RETURN Nombre_;
 END//
+-- SELECT NombreProductoMasCaro();
 
-SELECT NombreProductoMasCaro();
 -- 18. Obtener el número total de tipos registrados.
-DELIMITER //
 CREATE FUNCTION CantidadTipos()
 RETURNS INT
 READS SQL DATA
@@ -388,11 +669,9 @@ BEGIN
 
     RETURN Cantidad_Total;
 END//
-
-SELECT CantidadTipos();
+-- SELECT CantidadTipos();
 
 -- 19. Obtener el producto menos vendido.
-DELIMITER //
 CREATE FUNCTION ProductoMenosVendido()
 RETURNS INT
 READS SQL DATA
@@ -424,11 +703,9 @@ BEGIN
 
     RETURN ID_;
 END//
+-- SELECT ProductoMenosVendido();
 
-SELECT ProductoMenosVendido();
 -- 20. Calcular el total de ganancias de un empleado.
-DELIMITER //
-
 CREATE FUNCTION CalcularGananciasEmpleado(pID_Empleado INT)
 RETURNS DECIMAL(9,2)
 READS SQL DATA
@@ -472,11 +749,9 @@ BEGIN
 
     RETURN Total;
 END//
-
-SELECT CalcularGananciasEmpleado (1);
+-- SELECT CalcularGananciasEmpleado (1);
 
 -- 21. Obtener nombre de recursos segun ID.
-
 CREATE FUNCTION ObtenerTipoRecurso(pRecurso_ID INT)
 RETURNS VARCHAR(50)
 READS SQL DATA
@@ -506,9 +781,7 @@ BEGIN
 
     RETURN Nombre_;
 END //
-
-select ObtenerTipoRecurso(2);
-
+-- SELECT ObtenerTipoRecurso(2);
 -- 22. Obtener el número de ventas realizadas por un cliente.
 CREATE FUNCTION NumeroVentasCliente(pCliente_ID INT)
 RETURNS INT
