@@ -164,7 +164,7 @@ CREATE TABLE
         Subtotal DECIMAL(9, 2) NOT NULL,
         ID_Venta INT NOT NULL,
         ID_Producto INT NOT NULL,
-        FOREIGN KEY (ID_Venta) REFERENCES Ventas (ID),
+        FOREIGN KEY (ID_Venta) REFERENCES Ventas (ID) ON DELETE CASCADE,
         FOREIGN KEY (ID_Producto) REFERENCES Productos (ID)
     );
 

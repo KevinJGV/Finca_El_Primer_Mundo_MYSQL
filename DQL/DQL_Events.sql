@@ -1,7 +1,6 @@
 USE Finca_El_Primer_Mundo;
 
-DELIMITER / /
-
+DELIMITER //
 -- 1. Limpiar la tabla de historial de precios.
 -- Limpia el historia de la tabla se registros_productos cada 6 meses.
 CREATE EVENT LimpiarPreciosProductos
@@ -409,7 +408,7 @@ END//
 -- By @KevinGV
 DELIMITER //
 CREATE EVENT AuditoriaCompras
-ON SCHEDULE EVERY 10 SECOND
+ON SCHEDULE EVERY 1 MONTH
 DO
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'AuditoriaCompras';

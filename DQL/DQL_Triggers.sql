@@ -1,6 +1,6 @@
 USE Finca_El_Primer_Mundo;
 
-DELIMITER / /
+DELIMITER //
 -- 1. Registrar la fecha de creación de un cliente.
 -- Al resgistrar un nuevo cliente se agrega a la tabla de Logs.
 CREATE TRIGGER RegistroCliente
