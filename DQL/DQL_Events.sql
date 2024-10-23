@@ -149,12 +149,17 @@ ON SCHEDULE EVERY 1 YEAR
 DO
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ResultadosAnuales';
-    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Ventas';
-    DECLARE Detalle TEXT DEFAULT 'Informe anual de ventas';
-    DECLARE 
-    
-    INSERT Resultados_Anuales(Tabla_Nombre,Nombre_Resultado,Fecha_Resultado,Descripcion,Resultado)
-    SE
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Resultados_Anuales';
+    DECLARE Detalle TEXT DEFAULT 'Informe anual de ventas Generado';
+    DECLARE Total_Ventas INT;
+    DECLARE Total_Ingresos DECIMAL(9,2);
+    SELECT COUNT(ID) INTO Total_Ventas FROM Ventas WHERE YEAR(Fecha) = YEAR(CURDATE());
+    SELECT SUM(Total) INTO Total_Ingresos FROM Ventas WHERE YEAR(Fecha) = YEAR(CURDATE());
+
+    INSERT INTO Resultados_Anuales(Tabla_Nombre,Nombre_Resultado,Fecha_Resultado,Descripcion,Resultado) VALUES
+    ('Ventas','Resultados Anuales Ventas', YEAR(CURDATE()),'Cantidad de Ventas totales', Total_Ventas),
+    ('Ventas','Resultados Anuales Ventas', YEAR(CURDATE()),'Ingresos Totales', Total_Ingresos);
+
     INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
     ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
 END//

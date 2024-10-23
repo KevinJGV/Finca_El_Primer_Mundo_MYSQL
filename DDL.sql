@@ -269,7 +269,7 @@ CREATE TABLE
         Tabla_Nombre VARCHAR(50) NOT NULL,
         ID_Referencia INT,
         Nombre_Resultado VARCHAR(50) NOT NULL,
-        Fecha_Resultado DATETIME NOT NULL,
+        Año_Resultado YEAR NOT NULL,
         Descripcion VARCHAR(100) NOT NULL,
         Resultado DECIMAL(9,2) NOT NULL
     );
