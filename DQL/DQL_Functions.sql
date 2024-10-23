@@ -1,6 +1,6 @@
 USE Finca_El_Primer_Mundo;
 
-DELIMITER / /
+DELIMITER //
 
 -- 1. Obtener el nombre completo del cliente.
 -- Obtiene el nombre completo del cliente por medio de su ID.

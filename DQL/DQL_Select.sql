@@ -9,6 +9,7 @@ SELECT
     es.Nombre AS Estado
 FROM Productos pr
 INNER JOIN Estados es ON pr.ID_Estado = es.ID;
+-- By @JavierEAcevedoN
 
 -- 2 Muestra todos los productos con su porcentaje de descuento y su descuento.
 SELECT 
@@ -20,6 +21,7 @@ SELECT
     CalcularDescuentoProducto(pr.ID) AS ValorDescuento
 FROM Productos pr
 INNER JOIN Descuentos de ON pr.ID_Descuento = de.ID;
+-- By @JavierEAcevedoN
 
 -- 3 Mustra el tipo de producto de cada producto.
 SELECT 
@@ -29,6 +31,7 @@ SELECT
     Costo,
     ObtenerTipoProducto(ID) AS TipoProducto
 FROM Productos;
+-- By @JavierEAcevedoN
 
 -- 4 Muestra el lote de cada producto que esta relacionado.
 SELECT 
@@ -40,6 +43,7 @@ SELECT
     lo.Fecha_Produccion
 FROM Productos pr
 INNER JOIN Lotes lo ON pr.ID_Lote = lo.ID;
+-- By @JavierEAcevedoN
 
 -- 5 Muestra todos los productos con sus recursos especificos.
 SELECT 
@@ -52,6 +56,7 @@ SELECT
     re.Costo AS RecursoCosto
 FROM Productos pr
 INNER JOIN Recursos re ON pr.ID_Recurso = re.ID;
+-- By @JavierEAcevedoN
 
 -- 6 Muestra los recursos con su estado.
 SELECT
@@ -61,6 +66,7 @@ SELECT
     es.Nombre
 FROM Recursos re
 INNER JOIN Estados es ON re.ID_Estado = es.ID;
+-- By @JavierEAcevedoN
 
 -- 7 Muestra los tipos de recurso de los recursos.
 SELECT
@@ -70,6 +76,7 @@ SELECT
     tr.Tipo
 FROM Recursos re
 INNER JOIN Tipos_Recursos tr ON re.ID_Tipo_Recurso = tr.ID;
+-- By @JavierEAcevedoN
 
 -- 8 Muestra los recursos padres relacionados de los recursos.
 SELECT
@@ -81,6 +88,7 @@ SELECT
     rp.Costo
 FROM Recursos re
 INNER JOIN Recursos rp ON re.Recurso_Padre_ID = rp.ID;
+-- By @JavierEAcevedoN
 
 -- 9 Muestra los recursos con sus recursos generadores.
 SELECT
@@ -92,99 +100,269 @@ SELECT
     rp.Costo
 FROM Recursos re
 INNER JOIN Recursos rp ON re.Recurso_Generador_ID = rp.ID;
+-- By @JavierEAcevedoN
 
 -- 10 Muestra los Logs que tienen que ver con eventos.
-SELECT * FROM Logs WHERE `Tipo_Actividad` = "Evento";
+SELECT * FROM Logs WHERE Tipo_Actividad = "EVENTO";
+-- By @JavierEAcevedoN
 
--- 11
-SELECT * FROM
+-- 11 Muestra los Logs que tienen que ver con triggers.
+SELECT * FROM Logs WHERE Tipo_Actividad = "TRIGGER";
+-- By @JavierEAcevedoN
 
--- 12
-SELECT * FROM
+-- 12 Muestra los Logs que tienen que ver con procedimientos.
+SELECT * FROM Logs WHERE Tipo_Actividad = "PROCEDIMIENTO";
+-- By @JavierEAcevedoN
 
--- 13
-SELECT * FROM
+-- 13 Muestra los Logs que tienen que ver con funciones.
+SELECT * FROM Logs WHERE Tipo_Actividad = "FUNCION";
+-- By @JavierEAcevedoN
 
--- 14
-SELECT * FROM
+-- 14 Muestra las notificaciones a los clientes.
+SELECT * FROM Notificaciones;
+-- By @JavierEAcevedoN
 
--- 15
-SELECT * FROM
+-- 15 Muestra el resumen de ventas diario.
+SELECT * FROM ResumenVentas;
+-- By @JavierEAcevedoN
 
--- 16
-SELECT * FROM
+-- 16 Muestra los recordatorios a los empleados.
+SELECT * FROM Recordatorios;
+-- By @JavierEAcevedoN
 
--- 17
-SELECT * FROM
+-- 17 Muestra los resultados de ventas mensuales.
+SELECT * FROM Resultados_Mensuales;
+-- By @JavierEAcevedoN
 
--- 18
-SELECT * FROM
+-- 18 Muestra los resultados de ventas anuales.
+SELECT * FROM Resultados_Anuales;
+-- By @JavierEAcevedoN
 
--- 19
-SELECT * FROM
+-- 19 Muestra las notoficacioens del sistema.
+SELECT * FROM Notificaciones_Sistema;
+-- By @JavierEAcevedoN
 
--- 20
-SELECT * FROM
+-- 20 Muestra cuando se uso con que tarea se uso y que recurso se uso.
+SELECT * FROM Reporte_Recursos_Usados;
+-- By @JavierEAcevedoN
 
--- 21
-SELECT * FROM
+-- 21 Muestra las Tareas que hay con su tipo.
+SELECT 
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje,
+    tt.Tipo
+FROM Tareas ta
+INNER JOIN Tipos_Tareas tt ON ta.ID_Tipo_Tarea = tt.ID;
+-- By @JavierEAcevedoN
 
--- 22
-SELECT * FROM
+-- 22 Muestra las tareas con sus sectores a los que estan asignadas.
+SELECT
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje,
+    se.Nombre AS Sector,
+    se.Hectareas
+FROM Tareas ta
+INNER JOIN Sectores se ON ta.ID_Sector = se.ID;
+-- By @JavierEAcevedoN
 
--- 23
-SELECT * FROM
+-- 23 Muestra las tareas con sus estados.
+SELECT
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje,
+    es.Nombre AS EstadoTarea
+FROM Tareas ta
+INNER JOIN Estados es ON ta.ID_Estado = es.ID;
+-- By @JavierEAcevedoN
 
--- 24
-SELECT * FROM
+-- 24 Muestra las empleados con sus tareas asignadas.
+SELECT
+    CONCAT(em.Nombre,' ',em.Apellido) AS NombreCompleto,
+    em.Fecha_Contratacion,
+    em.Salario,
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje
+FROM Empleados_Tareas et
+INNER JOIN Empleados em ON et.ID_Empleado = em.ID
+INNER JOIN Tareas ta ON et.ID_Tarea = ta.ID;
+-- By @JavierEAcevedoN
 
--- 25
-SELECT * FROM
+-- 25 Muestra los recursos con las tareas relacionadas.
+SELECT
+    re.Nombre,
+    re.Stock,
+    re.Costo,
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje
+FROM Recursos_Tareas rt
+INNER JOIN Recursos re ON rt.ID_Recurso = re.ID
+INNER JOIN Tareas ta ON rt.ID_Tarea = ta.ID;
+-- By @JavierEAcevedoN
 
--- 26
-SELECT * FROM
+-- 26 Muestra las compras con sus recursos relacionados.
+SELECT
+    re.Nombre,
+    re.Stock,
+    re.Costo,
+    dc.Cantidad,
+    dc.Precio_Unitario,
+    dc.Subtotal,
+    co.Fecha,
+    co.Total
+FROM Detalles_Compras dc
+INNER JOIN Recursos re ON dc.ID_Recurso = re.ID
+INNER JOIN Compras co ON dc.ID_Compra = co.ID;
+-- By @JavierEAcevedoN
 
--- 27
-SELECT * FROM
+-- 27 Muestra las compras con su estado.
+SELECT
+    co.Fecha,
+    co.Total,
+    es.Nombre AS EstadoCompra
+FROM Compras co
+INNER JOIN Estados es ON co.ID_Estado = es.ID;
+-- By @JavierEAcevedoN
 
--- 28
-SELECT * FROM
+-- 28 Muestra a que proveedor se le hizo la compra.
+SELECT
+    co.Fecha,
+    co.Total,
+    pr.Nombre AS Proveedor
+FROM Compras co
+INNER JOIN Proveedores pr ON co.ID_Proveedor = pr.ID;
+-- By @JavierEAcevedoN
 
--- 29
-SELECT * FROM
+-- 29 Muestra los proveedores con su estado.
+SELECT
+    pr.Nombre,
+    es.Nombre AS Estado
+FROM Proveedores pr
+INNER JOIN Estados es ON pr.ID_Estado = es.ID;
+-- By @JavierEAcevedoN
 
--- 30
-SELECT * FROM
+-- 30 Muestra los Proveedores con su tipo.
+SELECT
+    pr.Nombre,
+    tp.Tipo AS TipoProveedor
+FROM Proveedores pr
+INNER JOIN Tipos_Proveedores tp ON pr.ID_Tipo_Proveedor = tp.ID;
+-- By @JavierEAcevedoN
 
--- 31
-SELECT * FROM
+-- 31 Muestra las ventas con sus productos relacionados.
+SELECT
+    ve.Fecha,
+    ve.Total,
+    dv.Cantidad,
+    dv.Subtotal,
+    pr.Nombre AS Producto,
+    pr.Stock,
+    pr.Valor,
+    pr.Costo
+FROM Detalles_Ventas dv
+INNER JOIN Ventas ve ON dv.ID_Venta = ve.ID
+INNER JOIN Productos pr ON dv.ID_Producto = pr.ID;
+-- By @JavierEAcevedoN
 
--- 32
-SELECT * FROM
+-- 32 Muestra las ventas con su medio de pago.
+SELECT
+    ve.Fecha,
+    ve.Total,
+    mp.Tipo AS MedioDePago
+FROM Ventas ve
+INNER JOIN Medios_de_Pago mp ON ve.ID_Medio_de_Pago = mp.ID;
+-- By @JavierEAcevedoN
 
--- 33
-SELECT * FROM
+-- 33 Muestra las ventas con los empleados relacionados.
+SELECT
+    ve.Fecha,
+    ve.Total,
+    CONCAT(em.Nombre,' ',em.Apellido) AS NombreCompleto,
+    em.Fecha_Contratacion,
+    em.Salario
+FROM Ventas ve
+INNER JOIN Empleados em ON ve.ID_Empleado = em.ID;
+-- By @JavierEAcevedoN
 
--- 34
-SELECT * FROM
+-- 34 Muestra las ventas con sus clientes relacionados.
+SELECT
+    ve.Fecha,
+    ve.Total,
+    CONCAT(cl.Nombre,' ',cl.Apellido) AS NombreCompleto,
+    cl.Fecha_Nacimiento,
+    cl.Telefono
+FROM Ventas ve
+INNER JOIN Clientes cl ON ve.ID_Cliente = cl.ID;
+-- By @JavierEAcevedoN
 
--- 35
-SELECT * FROM
+-- 35 Muestra los empleados con su tipo.
+SELECT
+    CONCAT(em.Nombre,' ',em.Apellido) AS NombreCompleto,
+    em.Fecha_Contratacion,
+    em.Salario,
+    te.Tipo AS TipoEmpleado
+FROM Empleados em
+INNER JOIN Tipos_Empleados te ON em.ID_Tipo_Empleado = te.ID;
+-- By @JavierEAcevedoN
 
--- 36
-SELECT * FROM
+-- 36 Muestra los empleados con su estado.
+SELECT
+    CONCAT(em.Nombre,' ',em.Apellido) AS NombreCompleto,
+    em.Fecha_Contratacion,
+    em.Salario,
+    es.Nombre AS Estado
+FROM Empleados em
+INNER JOIN Estados es ON em.ID_Estado = es.ID;
+-- By @JavierEAcevedoN
 
--- 37
-SELECT * FROM
+-- 37 Muestra lso clientes con su descuento.
+SELECT
+    CONCAT(cl.Nombre,' ',cl.Apellido) AS NombreCompleto,
+    cl.Fecha_Nacimiento,
+    cl.Telefono,
+    CONCAT(de.Valor,'%') AS Descuento 
+FROM Clientes cl
+INNER JOIN Descuentos de ON cl.ID_Descuento = de.ID;
+-- By @JavierEAcevedoN
 
--- 38
-SELECT * FROM
+-- 38 Muestra la ciudad y el departamento de cada cliente.
+SELECT
+    CONCAT(cl.Nombre,' ',cl.Apellido) AS NombreCompleto,
+    cl.Fecha_Nacimiento,
+    cl.Telefono,
+    ci.Nombre AS Ciudad,
+    de.Nombre AS Departamento
+FROM Clientes cl
+INNER JOIN Ciudades ci ON cl.ID_Ciudad = ci.ID
+INNER JOIN Departamentos de ON ci.ID_Departamento = de.ID;
+-- By @JavierEAcevedoN
 
--- 39
-SELECT * FROM
+-- 39 Muestra el estado del cliente.
+SELECT
+    CONCAT(cl.Nombre,' ',cl.Apellido) AS NombreCompleto,
+    cl.Fecha_Nacimiento,
+    cl.Telefono,
+    es.Nombre AS Estado
+FROM Clientes cl
+INNER JOIN Estados es ON cl.ID_Estado  = es.ID;
+-- By @JavierEAcevedoN
 
--- 40
-SELECT * FROM
+-- 40 Muestra la edad de los clientes.
+SELECT 
+    CONCAT(Nombre,' ',Apellido) AS NombreCompleto,
+    Fecha_Nacimiento,
+    Telefono,
+    (YEAR(NOW()) - YEAR(Fecha_Nacimiento)) AS Edad
+FROM Clientes;
+-- By @JavierEAcevedoN
 
 -- 41
 SELECT * FROM

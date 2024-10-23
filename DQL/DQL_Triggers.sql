@@ -1,6 +1,6 @@
 USE Finca_El_Primer_Mundo;
 
-DELIMITER / /
+DELIMITER //
 -- 1. Registrar la fecha de creación de un cliente.
 -- Al resgistrar un nuevo cliente se agrega a la tabla de Logs.
 CREATE TRIGGER RegistroCliente
@@ -219,8 +219,16 @@ END//
 
 -- 8. Establecer el estado de un producto a "cancelada".
 -- Cuando el Stock de un producto llaga a 0 se pone automaticamente el estado a cancelado.
-CREATE TRIGGER ProductoCancelado
+CREATE TRIGGER ProductoCanceladoInsert
 AFTER INSERT ON Detalles_Ventas FOR EACH ROW
+BEGIN
+    UPDATE Productos 
+    SET ID_Estado = 6 
+    WHERE ID = NEW.ID_Producto AND Stock < 1;
+END;
+
+CREATE TRIGGER ProductoCanceladoUpdate
+AFTER UPDATE ON Detalles_Ventas FOR EACH ROW
 BEGIN
     UPDATE Productos 
     SET ID_Estado = 6 

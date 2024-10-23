@@ -286,17 +286,6 @@ VALUES
 ('Giro Postal'),
 ('Pagos en Línea'),
 ('Pago Contra Entrega');
-
-INSERT INTO Unidades_Medida (Unidad)
-VALUES
-('Mililitro'),
-('Litro'),
-('Kilogramo'),
-('Kilo'),
-('Tonelada'),
-('Docena'),
-('Unidad');
-
 INSERT INTO Lotes (Fecha_Produccion, Cantidad) VALUES
 ('2024-10-15', 500),
 ('2024-10-15', 180),

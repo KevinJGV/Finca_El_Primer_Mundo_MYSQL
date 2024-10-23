@@ -1,6 +1,6 @@
 USE Finca_El_Primer_Mundo;
 
-DELIMITER / /
+DELIMITER //
 
 -- 1. Limpiar la tabla de historial de precios.
 -- Limpia el historia de la tabla se registros_productos cada 6 meses.
