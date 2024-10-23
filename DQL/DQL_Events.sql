@@ -1,6 +1,6 @@
 USE Finca_El_Primer_Mundo;
 
-DELIMITER //
+DELIMITER / /
 
 -- 1. Limpiar la tabla de historial de precios.
 -- Limpia el historia de la tabla se registros_productos cada 6 meses.
@@ -296,48 +296,94 @@ BEGIN
 END//
 -- By @JavierEAcevedoN
 
--- 11. Reiniciar el saldo de clientes premium.
-
-CREATE EVENT nombreevento
-ON SCHEDULE EVERY numero intervalodetiempo
-STARTS fechaconhora -- opcional
-ENDS fechaconhora -- opcional
+-- 11. Realizar reportes de los recursos utilizados en cada tarea en el ultimo mes.
+-- Genera reportes mensuales de los recursos utilizados en cada tarea del mes anterior.
+-- By @KevinGV
+CREATE EVENT ReporteRecursosxTareaMesAnterior
+ON SCHEDULE EVERY 1 MONTH
 DO
 BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ReporteRecursosxTareaMesAnterior';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Reporte_Recursos_Usados';
+    DECLARE Detalle TEXT DEFAULT 'Reporte generado de recursos usados el mes anterior';
+
+    INSERT INTO Reporte_Recursos_Usados (ID_Tarea,ID_Recurso,Fecha)
+    SELECT
+        RT.ID_Tarea, RT.ID_Recurso, T.Fecha_inicio
+    FROM
+        Recursos_Tareas RT
+    JOIN Tareas T ON RT.ID_Tarea = T.ID
+    WHERE
+        Fecha_inicio BETWEEN DATE_SUB(CURDATE(), INTERVAL 2 MONTH) AND DATE_SUB(CURDATE(), INTERVAL 1 MONTH);
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
+    ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre); 
 END//
 
--- 12. Enviar Recordatorios de pago a clientes morosos.
-
-CREATE EVENT nombreevento
-ON SCHEDULE EVERY numero intervalodetiempo
-STARTS fechaconhora -- opcional
-ENDS fechaconhora -- opcional
+-- 12. Calcular costo de los recursos.
+-- Rectifica el costo diario de los recursos en función de su stock y precio unitario.
+-- By @KevinGV
+CREATE EVENT RectificarCostoRecursos
+ON SCHEDULE EVERY 1 DAY
 DO
 BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'RectificarCostoRecursos';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Productos';
+    DECLARE Detalle TEXT DEFAULT 'Costo de recursos correctamente rectificados';
+
+    UPDATE 
+        Recuros
+    SET
+        Costo = ObtenerPrecioUnitario(ID) * Stock;
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
+    ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);    
 END//
 
 -- 13. Revisar el stock de productos semanalmente.
-
-CREATE EVENT nombreevento
-ON SCHEDULE EVERY numero intervalodetiempo
-STARTS fechaconhora -- opcional
-ENDS fechaconhora -- opcional
+-- Notifica dos veces al día sobre el stock bajo de los productos.
+-- By @KevinGV
+CREATE EVENT NotificarStockBajo
+ON SCHEDULE EVERY 1 WEEK
 DO
 BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'NotificarStockBajo';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Notificaciones_Sistema';
+    DECLARE Detalle TEXT DEFAULT 'Notificaciones sobre Stock Bajo emitidas';
+
+    INSERT INTO Notificaciones_Sistema (Tabla, ID_Referencia, Mensaje, Fecha)
+    SELECT 'Productos', P.ID,'Stock por debajo del limite minimo admitible', NOW()
+    FROM Productos P
+    WHERE Stock <= 90;
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
+    ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);    
 END//
 
 -- 14. Verificar actualizaciones de precios.
-
-CREATE EVENT nombreevento
-ON SCHEDULE EVERY numero intervalodetiempo
-STARTS fechaconhora -- opcional
-ENDS fechaconhora -- opcional
+-- Ajusta los precios de los productos según los descuentos aplicables cada 6 horas.
+-- By @KevinGV
+CREATE EVENT RectificarPrecios
+ON SCHEDULE EVERY 6 HOUR
 DO
 BEGIN
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'RectificarPrecios';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Productos';
+    DECLARE Detalle TEXT DEFAULT 'Precios ajustados según Descuentos';
+
+    UPDATE
+        Productos P
+    JOIN Descuentos D ON P.ID_Descuento = D.ID
+    SET
+        P.Valor = P.Valor - ((P.Valor * D.Valor) / 100);
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
+    ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
 END//
 
 -- 15. Enviar informes de ventas anuales a los gerentes.
-
+-- Genera un informe anual con la cantidad de ventas y los ingresos totales de cada año.
+-- By @KevinGV
 CREATE EVENT ResultadosAnuales
 ON SCHEDULE EVERY 1 YEAR
 DO
@@ -359,7 +405,8 @@ BEGIN
 END//
 
 -- 16. Realizar auditorías mensuales de clientes.
-
+-- Audita mensualmente el porcentaje de compras de los clientes en relación con las ventas totales.
+-- By @KevinGV
 CREATE EVENT AuditoriaCompras
 ON SCHEDULE EVERY 1 MONTH
 DO
@@ -392,7 +439,8 @@ BEGIN
 END//
 
 -- 17. Evaluar el rendimiento de los empleados.
-
+-- Calcula mensualmente el porcentaje de ventas realizado por cada empleado.
+-- By @KevinGV
 CREATE EVENT RendimientoEmpleados
 ON SCHEDULE EVERY 1 MONTH
 DO
@@ -426,7 +474,8 @@ BEGIN
 END//
 
 -- 18. Actualizar el estado de clientes inactivos.
-
+-- Activa automáticamente a los clientes que han realizado compras en el último año.
+-- By @KevinGV
 CREATE EVENT ActivarClientes
 ON SCHEDULE EVERY 1 DAY
 DO
@@ -464,7 +513,8 @@ BEGIN
 END//
 
 -- 19. Ajustar descuento de productos automáticamente segun un criterio especifico.
-
+-- Ajusta descuentos de productos según el día de la semana y tipo.
+-- By @KevinGV
 CREATE EVENT DCTOsegunProductoyDia
 ON SCHEDULE EVERY 1 DAY
 DO
@@ -514,6 +564,8 @@ BEGIN
 END//
 
 -- 20. revisar los descuentos aplicados a Clientes
+-- Actualiza descuentos de clientes según su antigüedad.
+-- By @KevinGV
 CREATE EVENT RevisarDCTO
 ON SCHEDULE EVERY 1 DAY
 DO
@@ -577,4 +629,5 @@ BEGIN
     INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
     ("EVENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
 END //
-DELIMITER ;
+
+DELIMITER;

@@ -1,6 +1,6 @@
 USE Finca_El_Primer_Mundo;
 
-DELIMITER //
+DELIMITER / /
 
 -- 1. Obtener el nombre completo del cliente.
 -- Obtiene el nombre completo del cliente por medio de su ID.
@@ -343,7 +343,7 @@ BEGIN
 
     RETURN Total;
 END//
-SELECT NumeroVentasEmpleado(1);
+-- SELECT NumeroVentasEmpleado(1);
 -- By @JavierEAcevedoN
 
 -- 10. Calcular el promedio de precios de los productos de un tipo.
@@ -385,6 +385,8 @@ END//
 -- By @JavierEAcevedoN
 
 -- 11. Obtener el número total de clientes registrados.
+-- Contar la cantidad total de clientes registrados en la base de datos.
+-- By @KevinGV
 CREATE FUNCTION TotalClientes()
 RETURNS INT
 READS SQL DATA
@@ -404,9 +406,10 @@ BEGIN
 
     RETURN Cantidad_Total;
 END//
--- SELECT TotalClientes();
 
 -- 12. Calcular el total de ingresos generados en un mes.
+-- Sumar el total de ingresos generados en un mes específico.
+-- By @KevinGV
 CREATE FUNCTION TotalIngresosMesYAño(pMes INT,pAño INT)
 RETURNS DECIMAL(9,2)
 READS SQL DATA
@@ -429,9 +432,10 @@ BEGIN
     END IF;
     RETURN Valor_;
 END//
--- SELECT TotalIngresosMesYAño(11,2024);
 
 -- 13. Obtener el nombre completo del cliente que más ha comprado. (Según cantidad de productos)
+-- Retorna el nombre completo del cliente que más ha comprado en cantidad de productos.
+-- By @KevinGV
 CREATE FUNCTION NombreClienteMayorCompras()
 RETURNS VARCHAR(50)
 READS SQL DATA
@@ -480,9 +484,9 @@ BEGIN
     ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,ID_);
     RETURN Nombre_;
 END//
--- SELECT NombreClienteMayorCompras();
 
 -- 14. Calcular el monto total de una venta específica.
+-- By @KevinGV
 CREATE FUNCTION MontoTotalVenta(pVenta_ID INT)
 RETURNS DECIMAL(9,2)
 READS SQL DATA
@@ -511,10 +515,9 @@ BEGIN
     END IF;
     RETURN Valor_;
 END//
--- SELECT MontoTotalVenta(10000);
 
 -- 15. Obtener el nombre del producto más vendido.
-DELIMITER //
+-- By @KevinGV
 CREATE FUNCTION NombreProductoMasVendido()
 RETURNS VARCHAR(50)
 READS SQL DATA
@@ -561,10 +564,9 @@ BEGIN
     ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,ID_);
     RETURN Nombre_;
 END//
--- SELECT NombreProductoMasVendido();
 
 -- 16. Calcular el porcentaje de ventas de un empleado.
-DELIMITER //
+-- By @KevinGV
 CREATE FUNCTION PorcentajeVentasxEmpleado(pEmpleado_ID INT)
 RETURNS DECIMAL(3,1)
 READS SQL DATA
@@ -598,10 +600,9 @@ BEGIN
     END IF;
     RETURN Porcentaje;
 END//
--- SELECT PorcentajeVentasxEmpleado(3);
 
 -- 17. Obtener el nombre del producto más caro.
-DELIMITER //
+-- By @KevinGV
 CREATE FUNCTION NombreProductoMasCaro()
 RETURNS VARCHAR(50)
 READS SQL DATA
@@ -632,9 +633,9 @@ BEGIN
     ("FUNCION",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,ID_);
     RETURN Nombre_;
 END//
--- SELECT NombreProductoMasCaro();
 
 -- 18. Obtener el número total de tipos registrados.
+-- By @KevinGV
 CREATE FUNCTION CantidadTipos()
 RETURNS INT
 READS SQL DATA
@@ -669,9 +670,9 @@ BEGIN
 
     RETURN Cantidad_Total;
 END//
--- SELECT CantidadTipos();
 
 -- 19. Obtener el producto menos vendido.
+-- By @KevinGV
 CREATE FUNCTION ProductoMenosVendido()
 RETURNS INT
 READS SQL DATA
@@ -703,9 +704,9 @@ BEGIN
 
     RETURN ID_;
 END//
--- SELECT ProductoMenosVendido();
 
 -- 20. Calcular el total de ganancias de un empleado.
+-- By @KevinGV
 CREATE FUNCTION CalcularGananciasEmpleado(pID_Empleado INT)
 RETURNS DECIMAL(9,2)
 READS SQL DATA
@@ -749,9 +750,9 @@ BEGIN
 
     RETURN Total;
 END//
--- SELECT CalcularGananciasEmpleado (1);
 
 -- 21. Obtener nombre de recursos segun ID.
+-- By @KevinGV
 CREATE FUNCTION ObtenerTipoRecurso(pRecurso_ID INT)
 RETURNS VARCHAR(50)
 READS SQL DATA
@@ -781,8 +782,9 @@ BEGIN
 
     RETURN Nombre_;
 END //
--- SELECT ObtenerTipoRecurso(2);
+
 -- 22. Obtener el número de ventas realizadas por un cliente.
+-- By @KevinGV
 CREATE FUNCTION NumeroVentasCliente(pCliente_ID INT)
 RETURNS INT
 READS SQL DATA
@@ -813,6 +815,7 @@ BEGIN
 END//
 
 -- 23. Obtener el precio unitario de un recurso
+-- By @KevinGV
 CREATE FUNCTION ObtenerPrecioUnitario(pRecurso_ID INT)
 RETURNS DECIMAL(9,2)
 READS SQL DATA
@@ -847,6 +850,7 @@ BEGIN
 END //
 
 -- 24. Obtener antiguedad de cliente
+-- By @KevinGV
 CREATE FUNCTION AntiguedadCliente(pClientes_ID INT)
 RETURNS INT
 READS SQL DATA
@@ -892,7 +896,7 @@ BEGIN
 END //
 
 -- 25. Obtener ultima venta de un cliente
-
+-- By @KevinGV
 CREATE FUNCTION FechaUltimaVentaCliente(pCliente_ID INT)
 RETURNS DATE
 READS SQL DATA
@@ -924,6 +928,7 @@ BEGIN
 END //
 
 -- 26. Obtener el id tipo de empleado
+-- By @KevinGV
 CREATE FUNCTION ObtenerTipoEmpledo(pEmpleado_ID INT)
 RETURNS INT
 READS SQL DATA
@@ -954,7 +959,7 @@ BEGIN
 END //
 
 -- 27. Calcular el porcentaje de compras de un cliente.
-DELIMITER //
+-- By @KevinGV
 CREATE FUNCTION PorcentajeComprasxCliente(pCliente_ID INT)
 RETURNS DECIMAL(3,1)
 READS SQL DATA
@@ -988,4 +993,5 @@ BEGIN
     END IF;
     RETURN Porcentaje;
 END//
+
 DELIMITER;
