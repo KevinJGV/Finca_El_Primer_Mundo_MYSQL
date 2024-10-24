@@ -535,11 +535,29 @@ SELECT * FROM
 -- 97
 SELECT * FROM
 
--- 98
+-- 98. Productos con un stock considerado bajo
 SELECT * FROM
 
--- 99
-SELECT * FROM
+-- 99. Productos pertenecientes a un lote determinado que ademas sean de un tipo de producto determinado
+SELECT
+    P.ID,
+    P.Nombre AS Producto,
+    P.ID_Lote,
+    TP.Tipo
+FROM
+    Productos P
+    JOIN Tipos_Productos TP ON P.ID_Tipo_Producto = TP.ID
+WHERE
+    P.ID_Lote = 2 AND P.ID_Tipo_Producto = 2;
 
--- 100
-SELECT * FROM
+-- 100. Tareas que tengan asignado un sector con igual o menos de 2 hectareas
+SELECT
+    T.ID AS ID_TAREA,
+    T.Descripción,
+    T.ID_Sector,
+    S.Hectareas
+FROM
+    Tareas T
+    JOIN Sectores S ON T.ID_Sector = S.ID
+WHERE
+    S.Hectareas <= 2;

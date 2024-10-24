@@ -341,7 +341,7 @@ BEGIN
 END//
 
 -- 13. Revisar el stock de productos semanalmente.
--- Notifica dos veces al día sobre el stock bajo de los productos.
+-- Notifica cada 7 días sobre el stock bajo de los productos.
 -- By @KevinGV
 CREATE EVENT NotificarStockBajo
 ON SCHEDULE EVERY 1 WEEK
