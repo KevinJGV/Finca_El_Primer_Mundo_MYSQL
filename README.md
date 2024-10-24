@@ -68,7 +68,6 @@ Procedimientos y funciones se pueden ejecutar manualmente utilizando el comando 
   ```sql
   SELECT nombre_de_funcion(parametros);
   ```
-
 - Los triggers y eventos se activan automáticamente cuando ocurren ciertas acciones (como inserciones o actualizaciones) en las tablas asociadas.
 
 ## Resumen de la Estructura de la Base de Datos de **Finca El Primer Mundo**
@@ -281,7 +280,7 @@ Cada [procedimiento](DQL/DQL_Procedures.sql) también registra las operaciones e
 
 Estas [funciones](DQL/DQL_Functions.sql) son útiles para obtener resultados específicos rápidamente y también mantienen registros en los logs.
 
-### 3. **Triggers (Disparadores)**
+### 3. **Triggers**
 
 **Ejemplos:**
 
@@ -291,7 +290,7 @@ Estas [funciones](DQL/DQL_Functions.sql) son útiles para obtener resultados esp
 
 Estos [triggers](DQL/DQL_Triggers.sql) garantizan que los cambios críticos se manejen automáticamente y se registren de manera adecuada.
 
-### 4. **Eventos (Events)**
+### 4. **Eventos**
 
 **Ejemplos:**
 
@@ -425,7 +424,7 @@ Las contribuciones en este proyecto y sus respectivas tareas fueron de los sigui
   - 10 Procedimientos almacenados
   - 10 Eventos
 - Documentación Readme y UML (Localizado en el archivo [index.html](index.html))
-- x Consultas
+- 17 Consultas
 
 ### [Javier Eduardo Acevedo Noguera](https://github.com/JavierEAcevedoN)
 
@@ -436,7 +435,7 @@ Las contribuciones en este proyecto y sus respectivas tareas fueron de los sigui
   - 10 Procedimientos almacenados
   - 10 Eventos
 - Implementación de usuarios
-- x Consultas
+- 84 Consultas
 
 ## Licencia
 

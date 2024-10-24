@@ -871,7 +871,12 @@ VALUES
 ('Supervisión del sistema de riego', '2024-09-05', '2024-09-10', 76.00, 6, 1, 3),
 ('Mantenimiento de instalaciones ganaderas', '2024-09-08', '2024-09-15', 81.00, 1, 2, 4),
 ('Revisión de sistemas de almacenamiento', '2024-09-20', '2024-09-25', 93.00, 9, 1, 5),
-('Gestión de compra de repuestos', '2024-09-10', '2024-09-15', 100.00, 8, 1, 7);
+('Gestión de compra de repuestos', '2024-09-10', '2024-09-15', 100.00, 8, 1, 7),
+('Riego de cultivos en el sector norte', '2024-10-01', NULL, NULL, 1, 1, 6),
+('Revisión de maquinaria agrícola', '2024-10-15', NULL, NULL, 2, 1, 5),
+('Control de plagas en invernadero', '2024-10-20', NULL, NULL, 3, 1, 4),
+('Mantenimiento de cercas en sector sur', '2024-10-10', NULL, NULL, 4, 1, 4);
+
 
 INSERT INTO Recursos_Tareas (ID_Recurso, ID_Tarea) VALUES 
 (1, 3),

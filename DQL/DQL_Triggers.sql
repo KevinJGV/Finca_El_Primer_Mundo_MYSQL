@@ -270,7 +270,7 @@ VALUES (1, 432.93, 32, 1);
 -- By @JavierEAcevedoN
 
 -- 11. Calcular el costo de Recursos en Stock.
--- By @KevinGV
+-- By @KevinJGV
 CREATE TRIGGER CalcularCostoRecursos
 BEFORE UPDATE ON Recursos FOR EACH ROW
 BEGIN
@@ -288,7 +288,7 @@ BEGIN
 END//
 
 -- 12. Prevenir la eliminación de un cliente si tiene ventas.
--- By @KevinGV
+-- By @KevinJGV
 CREATE TRIGGER PrevenirCambioEstadoClienteConVentas
 BEFORE UPDATE ON Clientes FOR EACH ROW
 BEGIN
@@ -299,7 +299,7 @@ BEGIN
 END//
 
 -- 13. Registrar las ventas en los logs.
--- By @KevinGV
+-- By @KevinJGV
 CREATE TRIGGER RegistroVentaLog
 AFTER INSERT ON Ventas FOR EACH ROW
 BEGIN
@@ -312,7 +312,7 @@ BEGIN
 END//
 
 -- 14. Reajustar el stock de recursos de tipo semilla, insumo quimico, riego, material de construccion, energia si tiene un estado diferente a 'activo'.
--- By @KevinGV
+-- By @KevinJGV
 CREATE TRIGGER ReajustesStockInventarioTipo
 BEFORE UPDATE ON Recursos FOR EACH ROW
 BEGIN
@@ -329,7 +329,7 @@ BEGIN
 END//
 
 -- 15. Registrar la fecha de última actividad de un cliente.
--- By @KevinGV
+-- By @KevinJGV
 CREATE TRIGGER UltimaCompraCliente
 AFTER INSERT ON Ventas FOR EACH ROW
 BEGIN
@@ -341,7 +341,7 @@ BEGIN
 END//
 
 -- 16. Validar que el nombre del producto no esté vacío.
--- By @KevinGV
+-- By @KevinJGV
 CREATE TRIGGER ProductoNombreNoVacioInsert
 BEFORE INSERT ON Productos FOR EACH ROW
 BEGIN
@@ -361,7 +361,7 @@ BEGIN
 END//
 
 -- 17. Registrar el cambio de estado de un cliente.
--- By @KevinGV
+-- By @KevinJGV
 CREATE TRIGGER RegistrarNuevoEstadoCliente
 AFTER UPDATE ON Clientes FOR EACH ROW
 BEGIN
@@ -375,7 +375,7 @@ BEGIN
 END//
 
 -- 18. Calcular el subtotal de un detalle de venta automáticamente.
--- By @KevinGV
+-- By @KevinJGV
 CREATE TRIGGER SubtotalCalculado
 BEFORE INSERT ON Detalles_Ventas FOR EACH ROW
 BEGIN
@@ -398,7 +398,7 @@ BEGIN
 END//
 
 -- 19. Prevenir la inserción de un detalle de venta si la cantidad es negativa.
--- By @KevinGV
+-- By @KevinJGV
 CREATE TRIGGER AnularDetalle_VentaCantidadNegativa
 BEFORE INSERT ON Detalles_Ventas 
 FOR EACH ROW
@@ -410,7 +410,7 @@ BEGIN
 END//
 
 -- 20. Registrar cambios en la información del empleado.
--- By @KevinGV
+-- By @KevinJGV
 CREATE TRIGGER RegistrarCambioEmpleado
 AFTER UPDATE ON Empleados FOR EACH ROW
 BEGIN

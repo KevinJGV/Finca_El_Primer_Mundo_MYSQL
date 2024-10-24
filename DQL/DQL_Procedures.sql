@@ -332,6 +332,7 @@ END//
 -- By @JavierEAcevedoN
 
 -- 11. Agregar una categoría de Recursos.
+-- By @KevinJGV
 CREATE PROCEDURE NuevoTipoRecurso (IN pTipo VARCHAR(50))
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'NuevoTipoRecurso';
@@ -345,7 +346,7 @@ BEGIN
 END//
 
 -- 12. Obtener clientes por rango de fechas de nacimiento.
--- By @KevinGV
+-- By @KevinJGV
 CREATE PROCEDURE ClientesEntreFechasNacimiento (IN pFecha_inicio DATE, IN pFecha_fin DATE)
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ClientesEntreFechasNacimiento';
@@ -364,7 +365,7 @@ BEGIN
 END//
 
 -- 13. Obtener total de ventas por cliente.
--- By @KevinGV
+-- By @KevinJGV
 CREATE PROCEDURE TotalVentasCliente (IN pCliente_ID INT)
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'TotalVentasCliente';
@@ -388,7 +389,7 @@ BEGIN
 END//
 
 -- 14. Obtener total de ventas por empleado.
--- By @KevinGV
+-- By @KevinJGV
 CREATE PROCEDURE TotalVentasEmpleado (IN pEmpleado_ID INT)
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'TotalVentasEmpleado';
@@ -412,7 +413,7 @@ BEGIN
 END//
 
 -- 15. Eliminar producto.
--- By @KevinGV
+-- By @KevinJGV
 CREATE PROCEDURE DesactivarProducto (IN pProducto_ID INT)
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'DesactivarProducto';
@@ -428,7 +429,7 @@ BEGIN
 END//
 
 -- 16. Eliminar una venta.
--- By @KevinGV
+-- By @KevinJGV
 CREATE PROCEDURE EliminarVenta (IN pVenta_ID INT)
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'EliminarVenta';
@@ -443,7 +444,7 @@ BEGIN
 END//
 
 -- 17. Obtener productos por precio mínimo y máximo.
--- By @KevinGV
+-- By @KevinJGV
 CREATE PROCEDURE ProductosEntreValores (IN pRango_inicial INT, IN pRango_final INT)
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ProductosEntreValores';
@@ -462,7 +463,7 @@ BEGIN
 END//
 
 -- 18. Obtener ventas por rango de fechas.
--- By @KevinGV
+-- By @KevinJGV
 CREATE PROCEDURE VentasEntreFechas (IN pFecha_inicial DATE, IN pFecha_final DATE)
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'VentasEntreFechas';
@@ -481,7 +482,7 @@ BEGIN
 END//
 
 -- 19. Obtener cantidad total de productos vendidos por categoría.
--- By @KevinGV
+-- By @KevinJGV
 CREATE PROCEDURE CantidadVentasxTipo()
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'CantidadVentasxTipo';
@@ -503,7 +504,7 @@ BEGIN
 END//
 
 -- 20. Generar reporte de ventas mensual.
--- By @KevinGV
+-- By @KevinJGV
 CREATE PROCEDURE ReporteMensual (IN pReferencia_ID INT, IN Nombre_Resultado VARCHAR(50), IN Fecha_Resultado DATETIME, IN Descripcion VARCHAR(100),IN Resultado DECIMAL(9,2))
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ReporteMensual';

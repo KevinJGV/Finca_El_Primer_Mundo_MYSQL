@@ -493,52 +493,227 @@ SELECT * FROM
 -- 83
 SELECT * FROM
 
--- 84
-SELECT * FROM
+-- 84. Productos con descuento mayor al promedio
+-- By @KevinJGV
+SELECT 
+    P.Nombre
+FROM 
+    Productos P
+WHERE 
+    P.ID_Descuento IN (
+        SELECT 
+            D.ID
+        FROM 
+            Descuentos D
+        WHERE 
+            D.Valor > (SELECT AVG(Valor) FROM Descuentos)
+    );
 
--- 85
-SELECT * FROM
+-- 85. Tareas asignadas a empleados con el salario más alto de su tipo
+-- By @KevinJGV
+SELECT E.Nombre, T.Descripción
+FROM Empleados_Tareas ET
+JOIN Empleados E ON ET.ID_Empleado = E.ID
+JOIN Tareas T ON ET.ID_Tarea = T.ID
+WHERE E.Salario = (SELECT MAX(Salario) 
+                   FROM Empleados 
+                   WHERE ID_Tipo_Empleado = E.ID_Tipo_Empleado);
 
--- 86
-SELECT * FROM
+-- 86. Proveedores con recursos comprados en los últimos 3 meses
+-- By @KevinJGV
+SELECT 
+    P.Nombre
+FROM 
+    Proveedores P
+WHERE 
+    P.ID IN (
+        SELECT 
+            C.ID_Proveedor
+        FROM 
+            Compras C
+        WHERE 
+            C.Fecha BETWEEN DATE_SUB(CURDATE(), INTERVAL 3 MONTH) AND CURDATE()
+    );
 
--- 87
-SELECT * FROM
+-- 87. Recursos con costo mayor al costo promedio generado por otros
+-- By @KevinJGV
+SELECT 
+    R.Nombre,
+    R.Costo
+FROM
+    Recursos R
+WHERE
+    R.Costo > (
+        SELECT
+            AVG(R2.Costo)
+        FROM
+            Recursos R2
+    );
 
--- 88
-SELECT * FROM
+-- 88. Sectores con más hectáreas que el promedio de todos los sectores
+-- By @KevinJGV
+SELECT
+    S.Nombre,
+    S.Hectareas
+FROM
+    Sectores S
+WHERE
+    S.Hectareas > (
+        SELECT
+            AVG(S2.Hectareas)
+        FROM
+            Sectores S2
+    );
 
--- 89
-SELECT * FROM
+-- 89. Ciudad que tiene el mayor número de clientes
+-- By @KevinJGV
+SELECT
+    Nombre
+FROM
+    Ciudades
+WHERE
+    ID = (
+        SELECT
+            ID_Ciudad
+        FROM
+            Clientes
+        GROUP BY
+            `ID_Ciudad`
+        ORDER BY
+            COUNT(*) DESC
+        LIMIT 1
+    );
 
--- 90
-SELECT * FROM
+-- 90. Tareas que han finalizado con un porcentaje superior al promedio de su sector
+-- By @KevinJGV
+SELECT 
+    T.ID,
+    T.Descripción
+FROM
+    Tareas T
+WHERE
+    T.Resultado_Porcentaje > (
+        SELECT
+            AVG(T2.Resultado_Porcentaje)
+        FROM
+            Tareas T2
+        WHERE
+            T.ID_Tipo_Tarea = T2.ID_Tipo_Tarea
+    );
 
--- 91
-SELECT * FROM
+-- 91. Productos con valor superior al valor promedio de productos de su tipo
+-- By @KevinJGV
+SELECT
+    P.Nombre,
+    P.Valor
+FROM
+    Productos P
+WHERE
+    Valor > (
+        SELECT
+            AVG(P2.Valor)
+        FROM
+            Productos P2
+        WHERE
+            P.ID_Tipo_Producto = P2.ID_Tipo_Producto
+    );
 
--- 92
-SELECT * FROM
+-- 92. Empleados con salario superior al promedio de su estado
+-- By @KevinJGV
+SELECT
+    CONCAT(E.Nombre, ' ', E.Apellido) AS EMPLEADO,
+    E.Salario
+FROM
+    Empleados E
+WHERE
+    Salario > (
+        SELECT
+            AVG(Salario)
+        FROM
+            Empleados E2
+        WHERE
+            E.ID_Estado = E2.ID_Estado);
 
--- 93
-SELECT * FROM
+-- 93. Proveedores con más de sus recursos en stock
+-- By @KevinJGV
+SELECT
+    ID,
+    Nombre
+FROM
+    Proveedores
+WHERE
+    ID_Estado = (
+        SELECT
+            ID_Estado
+        FROM
+            Recursos
+        WHERE
+            Stock = (
+                SELECT
+                    MAX(Stock)
+                FROM
+                    Recursos
+            )
+    );
 
--- 94
-SELECT * FROM
+-- 94. Clientes con el descuento más alto
+-- By @KevinJGV
+SELECT
+    CONCAT(C.Nombre, ' ',C.Apellido) AS CLIENTE,
+    D.Valor AS DESCUENTO
+FROM
+    Clientes C
+    JOIN Descuentos D ON C.ID_Descuento = D.ID
+WHERE
+    C.ID_Descuento = (
+        SELECT
+            MAX(ID_Descuento)
+        FROM
+            Clientes
+    );
 
--- 95
-SELECT * FROM
+-- 95. Tareas que a dia de hoy aun no hayan finalizado
+-- By @KevinJGV
+SELECT
+    ID,
+    Descripción,
+    Fecha_inicio
+FROM
+    Tareas
+WHERE
+    Fecha_fin IS NULL;
 
--- 96
-SELECT * FROM
+-- 96. Empleados que realizan una tarea en un dia determinado
+-- By @KevinJGV
+SELECT 
+    T.ID AS ID_TAREA,
+    T.Descripción,
+    CONCAT(E.Nombre, " ", E.Apellido) AS EMPLEADO,
+    'Tarea en curso' AS ESTADO
+FROM
+    Tareas T
+    JOIN Empleados_Tareas ET ON T.ID = ET.ID_Tarea
+    JOIN Empleados E ON ET.ID_Empleado = E.ID
+WHERE
+    '2024-09-05' BETWEEN T.Fecha_inicio AND COALESCE(T.Fecha_fin,'2024-09-05');
 
--- 97
-SELECT * FROM
+-- 97. Ventas con productos que actualmente esten en estado Activo
+-- By @KevinJGV
+SELECT
+    *
+FROM
+    Ventas V
+    JOIN Detalles_Ventas DV ON V.ID = DV.ID_Venta
+    JOIN Productos P ON DV.ID_Producto = P.ID
+WHERE
+    P.ID_Estado = 1
 
 -- 98. Productos con un stock considerado bajo
-SELECT * FROM
+-- By @KevinJGV
+SELECT * FROM Productos WHERE Stock <= 80;
 
 -- 99. Productos pertenecientes a un lote determinado que ademas sean de un tipo de producto determinado
+-- By @KevinJGV
 SELECT
     P.ID,
     P.Nombre AS Producto,
@@ -551,6 +726,7 @@ WHERE
     P.ID_Lote = 2 AND P.ID_Tipo_Producto = 2;
 
 -- 100. Tareas que tengan asignado un sector con igual o menos de 2 hectareas
+-- By @KevinJGV
 SELECT
     T.ID AS ID_TAREA,
     T.Descripción,

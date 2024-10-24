@@ -298,7 +298,7 @@ END//
 
 -- 11. Realizar reportes de los recursos utilizados en cada tarea en el ultimo mes.
 -- Genera reportes mensuales de los recursos utilizados en cada tarea del mes anterior.
--- By @KevinGV
+-- By @KevinJGV
 CREATE EVENT ReporteRecursosxTareaMesAnterior
 ON SCHEDULE EVERY 1 MONTH
 DO
@@ -322,7 +322,7 @@ END//
 
 -- 12. Calcular costo de los recursos.
 -- Rectifica el costo diario de los recursos en función de su stock y precio unitario.
--- By @KevinGV
+-- By @KevinJGV
 CREATE EVENT RectificarCostoRecursos
 ON SCHEDULE EVERY 1 DAY
 DO
@@ -342,7 +342,7 @@ END//
 
 -- 13. Revisar el stock de productos semanalmente.
 -- Notifica cada 7 días sobre el stock bajo de los productos.
--- By @KevinGV
+-- By @KevinJGV
 CREATE EVENT NotificarStockBajo
 ON SCHEDULE EVERY 1 WEEK
 DO
@@ -362,7 +362,7 @@ END//
 
 -- 14. Verificar actualizaciones de precios.
 -- Ajusta los precios de los productos según los descuentos aplicables cada 6 horas.
--- By @KevinGV
+-- By @KevinJGV
 CREATE EVENT RectificarPrecios
 ON SCHEDULE EVERY 6 HOUR
 DO
@@ -383,7 +383,7 @@ END//
 
 -- 15. Enviar informes de ventas anuales a los gerentes.
 -- Genera un informe anual con la cantidad de ventas y los ingresos totales de cada año.
--- By @KevinGV
+-- By @KevinJGV
 CREATE EVENT ResultadosAnuales
 ON SCHEDULE EVERY 1 YEAR
 DO
@@ -406,7 +406,7 @@ END//
 
 -- 16. Realizar auditorías mensuales de clientes.
 -- Audita mensualmente el porcentaje de compras de los clientes en relación con las ventas totales.
--- By @KevinGV
+-- By @KevinJGV
 DELIMITER //
 CREATE EVENT AuditoriaCompras
 ON SCHEDULE EVERY 1 MONTH
@@ -441,7 +441,7 @@ END//
 
 -- 17. Evaluar el rendimiento de los empleados.
 -- Calcula mensualmente el porcentaje de ventas realizado por cada empleado.
--- By @KevinGV
+-- By @KevinJGV
 CREATE EVENT RendimientoEmpleados
 ON SCHEDULE EVERY 1 MONTH
 DO
@@ -476,7 +476,7 @@ END//
 
 -- 18. Actualizar el estado de clientes inactivos.
 -- Activa automáticamente a los clientes que han realizado compras en el último año.
--- By @KevinGV
+-- By @KevinJGV
 CREATE EVENT ActivarClientes
 ON SCHEDULE EVERY 1 DAY
 DO
@@ -515,7 +515,7 @@ END//
 
 -- 19. Ajustar descuento de productos automáticamente segun un criterio especifico.
 -- Ajusta descuentos de productos según el día de la semana y tipo.
--- By @KevinGV
+-- By @KevinJGV
 CREATE EVENT DCTOsegunProductoyDia
 ON SCHEDULE EVERY 1 DAY
 DO
@@ -566,7 +566,7 @@ END//
 
 -- 20. revisar los descuentos aplicados a Clientes
 -- Actualiza descuentos de clientes según su antigüedad.
--- By @KevinGV
+-- By @KevinJGV
 CREATE EVENT RevisarDCTO
 ON SCHEDULE EVERY 1 DAY
 DO
