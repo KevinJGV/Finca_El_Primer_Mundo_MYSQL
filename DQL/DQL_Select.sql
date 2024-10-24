@@ -323,7 +323,7 @@ FROM Empleados em
 INNER JOIN Estados es ON em.ID_Estado = es.ID;
 -- By @JavierEAcevedoN
 
--- 37 Muestra lso clientes con su descuento.
+-- 37 Muestra los clientes con su descuento.
 SELECT
     CONCAT(cl.Nombre,' ',cl.Apellido) AS NombreCompleto,
     cl.Fecha_Nacimiento,
@@ -458,116 +458,455 @@ INNER JOIN Tareas ta ON rt.ID_Tarea = ta.ID
 WHERE rt.ID = 1;
 -- By @JavierEAcevedoN
 
--- 49
+-- 49 Muestra los empleados que estan relacionados con el sector de Crianza de Aves por medio de las tareas.
 SELECT
-    *
-FROM
+    CONCAT(em.Nombre,' ',em.Apellido) AS NombreCompleto,
+    em.Fecha_Contratacion,
+    em.Salario,
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje,
+    se.Nombre AS Sector
+FROM Empleados_Tareas et
+INNER JOIN Empleados em ON et.ID_Empleado = em.ID
+INNER JOIN Tareas ta ON et.ID_Tarea = ta.ID
+INNER JOIN Sectores se ON ta.ID_Sector = se.ID
+WHERE se.Nombre = "Crianza de Aves";
 -- By @JavierEAcevedoN
 
--- 50
+-- 50 Muestra los empleados que estan relacionados con el sector que tiene mas de 15 hectarias por medio de las tareas.
 SELECT
-    *
-FROM
+    CONCAT(em.Nombre,' ',em.Apellido) AS NombreCompleto,
+    em.Fecha_Contratacion,
+    em.Salario,
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje,
+    se.Nombre AS Sector,
+    se.Hectareas
+FROM Empleados_Tareas et
+INNER JOIN Empleados em ON et.ID_Empleado = em.ID
+INNER JOIN Tareas ta ON et.ID_Tarea = ta.ID
+INNER JOIN Sectores se ON ta.ID_Sector = se.ID
+WHERE se.Hectareas > 15;
 -- By @JavierEAcevedoN
 
--- 51
-SELECT * FROM
+-- 51 Muestra los recursos comprados que vienen por cada proveedor.
+SELECT
+    re.Nombre,
+    re.Stock,
+    re.Costo,
+    pr.Nombre AS Proveedor
+FROM Detalles_Compras dc
+INNER JOIN Recursos re ON dc.ID_Recurso = re.ID
+INNER JOIN Compras co ON dc.ID_Compra = co.ID
+INNER JOIN Proveedores pr ON co.ID_Proveedor = pr.ID;
+-- By @JavierEAcevedoN
 
--- 52
-SELECT * FROM
+-- 52 Muestra la cantidad de recursos por cada tipo.
+SELECT
+    COUNT(re.ID) AS CantidadRecursos,
+    tr.Tipo
+FROM Recursos re
+INNER JOIN Tipos_Recursos tr ON re.ID_Tipo_Recurso = tr.ID
+GROUP BY tr.Tipo;
+-- By @JavierEAcevedoN
 
--- 53
-SELECT * FROM
+-- 53 Muestra la cantidad de recursos comprados por cada proveedor.
+SELECT
+    COUNT(re.ID) AS CantidadRecursos,
+    pr.Nombre AS Proveedor
+FROM Detalles_Compras dc
+INNER JOIN Recursos re ON dc.ID_Recurso = re.ID
+INNER JOIN Compras co ON dc.ID_Compra = co.ID
+INNER JOIN Proveedores pr ON co.ID_Proveedor = pr.ID
+GROUP BY pr.Nombre;
+-- By @JavierEAcevedoN
 
--- 54
-SELECT * FROM
+-- 54 Muestra la cantidad de tareas por sector.
+SELECT
+    COUNT(ta.ID) AS CantidadTareas,
+    se.Nombre AS Sector
+FROM Tareas ta
+INNER JOIN Sectores se ON ta.ID_Sector = se.ID
+GROUP BY se.Nombre;
+-- By @JavierEAcevedoN
 
--- 55
-SELECT * FROM
+-- 55 Muestra la cantidad de tareas por tipo de tarea.
+SELECT 
+    COUNT(ta.ID) AS CantidadTareas,
+    tt.Tipo
+FROM Tareas ta
+INNER JOIN Tipos_Tareas tt ON ta.ID_Tipo_Tarea = tt.ID
+GROUP BY tt.Tipo;
+-- By @JavierEAcevedoN
 
--- 56
-SELECT * FROM
+-- 56 Muestra la cantidad de clientes por ciudad.
+SELECT
+    COUNT(cl.ID) AS CantidadClientes,
+    ci.Nombre AS Ciudad,
+    GROUP_CONCAT(DISTINCT de.Nombre SEPARATOR ", ") AS Departamento
+FROM Clientes cl
+INNER JOIN Ciudades ci ON cl.ID_Ciudad = ci.ID
+INNER JOIN Departamentos de ON ci.ID_Departamento = de.ID
+GROUP BY ci.Nombre;
+-- By @JavierEAcevedoN
 
--- 57
-SELECT * FROM
+-- 57 Muestra la cantidad de clientes por departamento.
+SELECT
+    COUNT(cl.ID) AS CantidadClientes,
+    de.Nombre AS Departamento
+FROM Clientes cl
+INNER JOIN Ciudades ci ON cl.ID_Ciudad = ci.ID
+INNER JOIN Departamentos de ON ci.ID_Departamento = de.ID
+GROUP BY de.Nombre;
+-- By @JavierEAcevedoN
 
--- 58
-SELECT * FROM
+-- 58 Muestra la cantidad de ventas por cada medio de pago.
+SELECT
+    COUNT(ve.ID) AS CantidadVentas,
+    mp.Tipo AS MedioDePago
+FROM Ventas ve
+INNER JOIN Medios_de_Pago mp ON ve.ID_Medio_de_Pago = mp.ID
+GROUP BY mp.Tipo;
+-- By @JavierEAcevedoN
 
--- 59
-SELECT * FROM
+-- 59 Muestra las ventas por cada empleado.
+SELECT
+    NumeroVentasEmpleado(em.ID),
+    CONCAT(em.Nombre,' ',em.Apellido) AS NombreCompleto
+FROM Ventas ve
+INNER JOIN Empleados em ON ve.ID_Empleado = em.ID
+GROUP BY em.ID;
+-- By @JavierEAcevedoN
 
--- 60
-SELECT * FROM
+-- 60 Muestra las ventas por cada cliente.
+SELECT
+    NumeroVentasCliente(cl.ID) AS CantidadVentas,
+    CONCAT(cl.Nombre,' ',cl.Apellido) AS NombreCompleto
+FROM Ventas ve
+INNER JOIN Clientes cl ON ve.ID_Cliente = cl.ID
+GROUP BY cl.ID;
+-- By @JavierEAcevedoN
 
--- 61
-SELECT * FROM
+-- 61 Cantidad de productos por cada descuento.
+SELECT 
+    COUNT(pr.ID) AS CantidadProductos,
+    CONCAT(de.Valor,"%") AS Descuento
+FROM Productos pr
+INNER JOIN Descuentos de ON pr.ID_Descuento = de.ID
+GROUP BY de.Valor;
+-- By @JavierEAcevedoN
 
--- 62
-SELECT * FROM
+-- 62 Muestra las cantidad de productos por tipo de producto.
+SELECT
+    COUNT(ID) AS CantidadProductos,
+    GROUP_CONCAT(DISTINCT ObtenerTipoProducto(ID) SEPARATOR ", ") AS TipoProducto
+FROM Productos
+GROUP BY ID_Tipo_Producto;
+-- By @JavierEAcevedoN
 
--- 63
-SELECT * FROM
+-- 63 Muestra los productos por cada lote.
+SELECT 
+    COUNT(pr.ID),
+    lo.Cantidad,
+    lo.Fecha_Produccion
+FROM Productos pr
+INNER JOIN Lotes lo ON pr.ID_Lote = lo.ID
+GROUP BY pr.ID_Lote;
+-- By @JavierEAcevedoN
 
--- 64
-SELECT * FROM
+-- 64 Clientes que han realizado compras cuyo total es mayor que el promedio de todas las ventas.
+SELECT
+    CONCAT(Nombre,' ',Apellido) AS NombreCompleto,
+    Fecha_Nacimiento,
+    Telefono
+FROM Clientes
+WHERE ID IN (
+    SELECT
+        ID_Cliente
+    FROM Ventas
+    WHERE Total > (
+        SELECT
+            AVG(Total)
+        FROM Ventas
+    )
+)
+-- By @JavierEAcevedoN
 
--- 65
-SELECT * FROM
+-- 65 Empleados que han trabajado en tareas de sectores con el mayor número de hectáreas
+SELECT
+    CONCAT(E.Nombre,' ',E.Apellido) AS NombreCompleto,
+    E.Fecha_Contratacion,
+    E.Salario
+FROM Empleados E
+WHERE E.ID IN (SELECT ET.ID_Empleado 
+               FROM Empleados_Tareas ET
+               JOIN Tareas T ON ET.ID_Tarea = T.ID
+               WHERE T.ID_Sector = (SELECT ID FROM Sectores 
+                                    ORDER BY Hectareas DESC LIMIT 1));
 
--- 66
-SELECT * FROM
 
--- 67
-SELECT * FROM
+-- By @JavierEAcevedoN
 
--- 68
-SELECT * FROM
+-- 66 Proveedores que han realizado compras en el estado con el mayor total de compras.
+SELECT
+    Nombre
+FROM Proveedores 
+WHERE ID IN (SELECT ID_Proveedor 
+               FROM Compras 
+               WHERE ID_Estado = (SELECT ID_Estado 
+                                  FROM Compras 
+                                  GROUP BY ID_Estado 
+                                  ORDER BY SUM(Total) DESC LIMIT 1));
+-- By @JavierEAcevedoN
 
--- 69
-SELECT * FROM
+-- 67 Ventas realizadas por empleados cuyo salario es superior al salario promedio de todos los empleados.
+SELECT 
+    ID,
+    Fecha,
+    Total
+FROM Ventas
+WHERE ID_Empleado IN (SELECT ID 
+                      FROM Empleados 
+                      WHERE Salario > (SELECT AVG(Salario) FROM Empleados));
+-- By @JavierEAcevedoN
 
--- 70
-SELECT * FROM
+-- 68 Recursos que han sido utilizados en el mayor número de tareas.
+SELECT
+    Nombre
+FROM Recursos
+WHERE ID IN (SELECT ID_Recurso 
+             FROM Recursos_Tareas 
+             GROUP BY ID_Recurso 
+             ORDER BY COUNT(*));
+-- By @JavierEAcevedoN
 
--- 71
-SELECT * FROM
+-- 69 Descuentos aplicados a productos cuyo costo es superior al costo promedio de productos de su tipo.
+SELECT
+    Nombre
+FROM Productos
+WHERE Costo > (SELECT AVG(Costo) 
+               FROM Productos AS P2 
+               WHERE P2.ID_Tipo_Producto = Productos.ID_Tipo_Producto);
 
--- 72
-SELECT * FROM
+-- By @JavierEAcevedoN
 
--- 73
-SELECT * FROM
+-- 70 Los productos con un el valor mayor al promedio del valor de los productos.
+SELECT
+    Nombre,
+    Valor
+FROM Productos
+WHERE Costo > (SELECT AVG(Valor) 
+               FROM Productos);
+-- By @JavierEAcevedoN
 
--- 74
-SELECT * FROM
+-- 71 Los productos con un el valor menor al promedio del valor de los productos.
+SELECT
+    Nombre,
+    Valor
+FROM Productos
+WHERE Costo < (SELECT AVG(Valor) 
+               FROM Productos);
+-- By @JavierEAcevedoN
 
--- 75
-SELECT * FROM
+-- 72 Los productos con un el costo mayor al promedio del costo de los productos.
+SELECT
+    Nombre,
+    Costo
+FROM Productos
+WHERE Costo > (SELECT AVG(Costo) 
+               FROM Productos);
+-- By @JavierEAcevedoN
 
--- 76
-SELECT * FROM
+-- 73 Los productos con un el costo menor al promedio del costo de los productos.
+SELECT
+    Nombre,
+    Costo
+FROM Productos
+WHERE Costo < (SELECT AVG(Costo) 
+               FROM Productos);
+-- By @JavierEAcevedoN
 
--- 77
-SELECT * FROM
+-- 74 Empleados con ventas con el total mayor que el promedio del total de ventas.
+SELECT
+    CONCAT(em.Nombre,' ',em.Apellido) AS NombreCompleto,
+    em.Fecha_Contratacion,
+    em.Salario,
+    ve.Fecha,
+    ve.Total
+FROM Ventas ve
+INNER JOIN Empleados em ON ve.ID_Empleado = em.ID
+WHERE `Total` > (
+    SELECT
+        AVG(`Total`)
+    FROM `Ventas`
+);
+-- By @JavierEAcevedoN
 
--- 78
-SELECT * FROM
+-- 75 Empleados que han vendido un producto con un tipo especifico.
+SELECT
+    CONCAT(em.Nombre,' ',em.Apellido) AS NombreCompleto,
+    em.Fecha_Contratacion,
+    em.Salario,
+    ve.Fecha,
+    ve.Total,
+    dv.Cantidad,
+    dv.Subtotal,
+    pr.Nombre AS Producto,
+    pr.Stock,
+    pr.Valor,
+    pr.Costo,
+    tp.`Tipo` AS TipoProducto
+FROM Detalles_Ventas dv
+INNER JOIN Ventas ve ON dv.ID_Venta = ve.ID
+INNER JOIN `Empleados` em ON ve.`ID_Empleado` = em.`ID`
+INNER JOIN Productos pr ON dv.ID_Producto = pr.ID
+INNER JOIN `Tipos_Productos` tp ON pr.`ID_Tipo_Producto` = tp.`ID`
+WHERE tp.`Tipo` = "Fruta";
+-- By @JavierEAcevedoN
 
--- 79
-SELECT * FROM
+-- 76 Empleados con ventas con el total menor que el promedio del total de ventas.
+SELECT
+    CONCAT(em.Nombre,' ',em.Apellido) AS NombreCompleto,
+    em.Fecha_Contratacion,
+    em.Salario,
+    ve.Fecha,
+    ve.Total
+FROM Ventas ve
+INNER JOIN Empleados em ON ve.ID_Empleado = em.ID
+WHERE `Total` < (
+    SELECT
+        AVG(`Total`)
+    FROM `Ventas`
+);
+-- By @JavierEAcevedoN
 
--- 80
-SELECT * FROM
+-- 77 Clientes que han vendido un producto con un tipo especifico.
+SELECT
+    CONCAT(cl.Nombre,' ',cl.Apellido) AS NombreCompleto,
+    cl.`Fecha_Nacimiento`,
+    cl.`Telefono`,
+    ve.Fecha,
+    ve.Total,
+    dv.Cantidad,
+    dv.Subtotal,
+    pr.Nombre AS Producto,
+    pr.Stock,
+    pr.Valor,
+    pr.Costo,
+    tp.`Tipo` AS TipoProducto
+FROM Detalles_Ventas dv
+INNER JOIN Ventas ve ON dv.ID_Venta = ve.ID
+INNER JOIN `Clientes` cl ON ve.`ID_Empleado` = cl.`ID`
+INNER JOIN Productos pr ON dv.ID_Producto = pr.ID
+INNER JOIN `Tipos_Productos` tp ON pr.`ID_Tipo_Producto` = tp.`ID`
+WHERE tp.`Tipo` = "Huevo";
+-- By @JavierEAcevedoN
 
--- 81
-SELECT * FROM
+-- 78 Los clientes que tienen el mismo decuento que un productos.
+SELECT
+    CONCAT(cl.Nombre,' ',cl.Apellido) AS NombreCompleto,
+    cl.Fecha_Nacimiento,
+    cl.Telefono,
+    CONCAT(de.Valor,'%') AS Descuento,
+    pr.`Nombre`,
+    pr.Stock,
+    pr.Valor,
+    pr.Costo
+FROM Clientes cl
+INNER JOIN Descuentos de ON cl.ID_Descuento = de.ID
+INNER JOIN `Productos` pr ON de.`ID` = pr.`ID_Descuento`
+-- By @JavierEAcevedoN
 
--- 82
-SELECT * FROM
+-- 79 Empleados que estan relacionados a tareas que estan relacionados a recursos.
+SELECT
+    re.Nombre,
+    re.Stock,
+    re.Costo,
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje,
+    CONCAT(em.Nombre,' ',em.Apellido) AS NombreCompleto,
+    em.Fecha_Contratacion,
+    em.Salario
+FROM Recursos_Tareas rt
+INNER JOIN Recursos re ON rt.ID_Recurso = re.ID
+INNER JOIN Tareas ta ON rt.ID_Tarea = ta.ID
+INNER JOIN Empleados_Tareas et ON et.`ID_Tarea` = ta.`ID`
+INNER JOIN Empleados em ON et.ID_Empleado = em.ID;
+-- By @JavierEAcevedoN
 
--- 83
-SELECT * FROM
+-- 80 Proveedores que tienen recursos asignados a tareas.
+SELECT
+    pr.Nombre AS Proveedor,
+    co.Fecha,
+    co.Total,
+    dc.Cantidad,
+    dc.Subtotal,
+    ta.Descripción,
+    re.Nombre
+FROM Recursos re
+INNER JOIN Detalles_Compras dc ON re.`ID` = dc.`ID_Compra`
+INNER JOIN Compras co ON dc.ID_Compra = co.ID
+INNER JOIN Proveedores pr ON co.ID_Proveedor = pr.ID
+INNER JOIN Recursos_Tareas rt ON rt.ID_Recurso = re.ID
+INNER JOIN Tareas ta ON rt.ID_Tarea = ta.ID
+-- By @JavierEAcevedoN
+
+-- 81 Muestra los recursos que se usan en tareas de tipo Siembra.
+SELECT 
+    re.Nombre,
+    re.Stock,
+    re.Costo,
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje,
+    tt.Tipo
+FROM `Recursos_Tareas` rt
+INNER JOIN `Tareas` ta ON rt.`ID_Tarea` = ta.`ID`
+INNER JOIN Recursos re ON rt.ID_Recurso = re.ID
+INNER JOIN `Tipos_Tareas` tt ON  ta.`ID_Tipo_Tarea` = tt.`ID`
+WHERE tt.`Tipo` = "Siembra"
+-- By @JavierEAcevedoN
+
+-- 82 Muestra los recursos que se usan en tareas de tipo Mantenimiento de cultivos.
+SELECT 
+    re.Nombre,
+    re.Stock,
+    re.Costo,
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje,
+    tt.Tipo
+FROM `Recursos_Tareas` rt
+INNER JOIN `Tareas` ta ON rt.`ID_Tarea` = ta.`ID`
+INNER JOIN Recursos re ON rt.ID_Recurso = re.ID
+INNER JOIN `Tipos_Tareas` tt ON  ta.`ID_Tipo_Tarea` = tt.`ID`
+WHERE tt.`Tipo` = "Mantenimiento de cultivos"
+-- By @JavierEAcevedoN
+
+-- 83 Muestra los recursos que se usan en tareas de tipo Control de calidad.
+SELECT 
+    re.Nombre,
+    re.Stock,
+    re.Costo,
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje,
+    tt.Tipo
+FROM `Recursos_Tareas` rt
+INNER JOIN `Tareas` ta ON rt.`ID_Tarea` = ta.`ID`
+INNER JOIN Recursos re ON rt.ID_Recurso = re.ID
+INNER JOIN `Tipos_Tareas` tt ON  ta.`ID_Tipo_Tarea` = tt.`ID`
+WHERE tt.`Tipo` = "Control de calidad"
+-- By @JavierEAcevedoN
 
 -- 84. Productos con descuento mayor al promedio
 -- By @KevinJGV
