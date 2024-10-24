@@ -957,6 +957,3 @@ INSERT INTO Empleados_Tareas (ID_Empleado, ID_Tarea) VALUES
 (23, 23),
 (24, 24),
 (25, 25);
-
--- INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
--- ("",proceso_nombre,NOW(),USER(),"","",);

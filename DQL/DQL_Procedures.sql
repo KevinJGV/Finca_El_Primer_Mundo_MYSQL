@@ -1,7 +1,6 @@
 USE Finca_El_Primer_Mundo;
 
 DELIMITER //
-
 -- 1. Insertar nuevo cliente.
 -- Inserta un nuevo cliente a la base de datos.
 CREATE PROCEDURE InsertarClinte (IN Nombre VARCHAR(50),IN Apellido VARCHAR(50), IN FechaNacimiento DATE, IN Telefono BIGINT, IN ID_Descuento INT, IN ID_Estado INT, IN ID_Ciudad INT)
@@ -332,43 +331,119 @@ END//
 -- CALL InsetarTipoProducto ("Cookie");
 -- By @JavierEAcevedoN
 
--- 11. Actualizar una categoría.
-CREATE PROCEDURE nombreprocedimiento (IN parametro INT)
+-- 11. Agregar una categoría de Recursos.
+CREATE PROCEDURE NuevoTipoRecurso (IN pTipo VARCHAR(50))
 BEGIN
-    -- CODE
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'NuevoTipoRecurso';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Recursos';
+    DECLARE Detalle TEXT DEFAULT 'Creado Nuevo Tipo de Recurso';
+
+    INSERT INTO Tipos_Recursos (Tipo) VALUES (pTipo);
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
+    ("PROCEDIMIENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
 END//
 
--- 12. Obtener clientes por rango de fechas de registro.
-CREATE PROCEDURE nombreprocedimiento (IN parametro INT)
+-- 12. Obtener clientes por rango de fechas de nacimiento.
+-- By @KevinGV
+CREATE PROCEDURE ClientesEntreFechasNacimiento (IN pFecha_inicio DATE, IN pFecha_fin DATE)
 BEGIN
-    -- CODE
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ClientesEntreFechasNacimiento';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Clientes';
+    DECLARE Detalle TEXT DEFAULT 'Total de Ventas por Cliente Obtenido';
+
+    SELECT
+        *
+    FROM
+        Clientes
+    WHERE
+        Fecha_Nacimiento BETWEEN pFecha_inicio AND pFecha_fin;
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada) VALUES
+    ("PROCEDIMIENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre);
 END//
 
 -- 13. Obtener total de ventas por cliente.
-CREATE PROCEDURE nombreprocedimiento (IN parametro INT)
+-- By @KevinGV
+CREATE PROCEDURE TotalVentasCliente (IN pCliente_ID INT)
 BEGIN
-    -- CODE
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'TotalVentasCliente';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Clientes';
+    DECLARE Detalle TEXT DEFAULT 'Total de Ventas por Cliente Obtenido';
+
+    SELECT
+        COUNT(V.ID) AS Ventas,
+        CONCAT(C.Nombre, ' ',C.Apellido) AS Cliente
+    FROM
+        Clientes C
+    JOIN
+        Ventas V ON C.ID = V.ID_Cliente
+    WHERE
+        C.ID = pCliente_ID
+    GROUP BY
+        Cliente;
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+    ("PROCEDIMIENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pCliente_ID);
 END//
 
 -- 14. Obtener total de ventas por empleado.
-CREATE PROCEDURE nombreprocedimiento (IN parametro INT)
+-- By @KevinGV
+CREATE PROCEDURE TotalVentasEmpleado (IN pEmpleado_ID INT)
 BEGIN
-    -- CODE
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'TotalVentasEmpleado';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Empleado';
+    DECLARE Detalle TEXT DEFAULT 'Total de Ventas por empleado Obtenido';
+
+    SELECT
+        COUNT(V.ID) AS Ventas,
+        CONCAT(E.Nombre, ' ',E.Apellido) AS Empleado
+    FROM
+        Empleados E
+    JOIN
+        Ventas V ON E.ID = V.ID_Empleado
+    WHERE
+        E.ID = pEmpleado_ID
+    GROUP BY
+        Empleado;
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+    ("PROCEDIMIENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pEmpleado_ID);
 END//
 
 -- 15. Eliminar producto.
-CREATE PROCEDURE nombreprocedimiento (IN parametro INT)
+-- By @KevinGV
+CREATE PROCEDURE DesactivarProducto (IN pProducto_ID INT)
 BEGIN
-    -- CODE
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'DesactivarProducto';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Productos';
+    DECLARE Detalle TEXT DEFAULT 'Desactivacion de Producto';
+
+    UPDATE Productos
+    SET ID_Estado = 2
+    WHERE ID = pProducto_ID;
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+    ("PROCEDIMIENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pProducto_ID);
 END//
 
 -- 16. Eliminar una venta.
-CREATE PROCEDURE nombreprocedimiento (IN parametro INT)
+-- By @KevinGV
+CREATE PROCEDURE EliminarVenta (IN pVenta_ID INT)
 BEGIN
-    -- CODE
+    DECLARE proceso_nombre VARCHAR(50) DEFAULT 'EliminarVenta';
+    DECLARE tabla_nombre VARCHAR(50) DEFAULT 'Ventas';
+    DECLARE Detalle TEXT DEFAULT 'Eliminacion de Venta';
+
+    DELETE FROM Ventas
+    WHERE ID = pVenta_ID;
+
+    INSERT INTO Logs (Tipo_Actividad, Nombre_Actividad,Fecha,Usuario_Ejecutor,Detalles,Tabla_Afectada,ID_Referencia) VALUES
+    ("PROCEDIMIENTO",proceso_nombre,NOW(),USER(),Detalle,tabla_nombre,pVenta_ID);
 END//
 
 -- 17. Obtener productos por precio mínimo y máximo.
+-- By @KevinGV
 CREATE PROCEDURE ProductosEntreValores (IN pRango_inicial INT, IN pRango_final INT)
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ProductosEntreValores';
@@ -387,6 +462,7 @@ BEGIN
 END//
 
 -- 18. Obtener ventas por rango de fechas.
+-- By @KevinGV
 CREATE PROCEDURE VentasEntreFechas (IN pFecha_inicial DATE, IN pFecha_final DATE)
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'VentasEntreFechas';
@@ -405,6 +481,7 @@ BEGIN
 END//
 
 -- 19. Obtener cantidad total de productos vendidos por categoría.
+-- By @KevinGV
 CREATE PROCEDURE CantidadVentasxTipo()
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'CantidadVentasxTipo';
@@ -426,6 +503,7 @@ BEGIN
 END//
 
 -- 20. Generar reporte de ventas mensual.
+-- By @KevinGV
 CREATE PROCEDURE ReporteMensual (IN pReferencia_ID INT, IN Nombre_Resultado VARCHAR(50), IN Fecha_Resultado DATETIME, IN Descripcion VARCHAR(100),IN Resultado DECIMAL(9,2))
 BEGIN
     DECLARE proceso_nombre VARCHAR(50) DEFAULT 'ReporteMensual';
