@@ -18,7 +18,7 @@
 						"$ref": "AAAAAAGSlxgZLqtRv3E="
 					},
 					"name": "Diagrama E-R UML",
-					"documentation": "Contiene todas las Tablas Definidas.\n\nEl Significado simbolico es el siguiente:\n\n- Tablas Verdes - Principal\n- Tablas Amarillas - Secundarias\n- Tablas Rojas - Asignación\n- Tablas Blancas - Logs y Registros",
+					"documentation": "Contiene todas las Tablas Definidas.\n\nEl Significado simbolico es el siguiente:\n\n- Tablas Verdes - Principal\n- Tablas Amarillas - Secundarias\n- Tablas Rojas - Asignación\n- Tablas Grises - Logs y Registros",
 					"defaultDiagram": true,
 					"ownedViews": [
 						{
@@ -9867,7 +9867,7 @@
 	],
 	"documentation": "Estructura SQL para la gestión integral de la Finca El Primer Mundo, que maneja las operaciones agropecuarias incluyendo recursos, producción, ventas, personal entre otras entidades principales ademas de otras secundarias.",
 	"author": "Javier Noguera, Kevin González",
-	"company": "CampusLandia",
+	"company": "CampusLands",
 	"copyright": "2024",
 	"version": "0.1"
 }
