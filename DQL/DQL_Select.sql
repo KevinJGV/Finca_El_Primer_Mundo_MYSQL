@@ -364,35 +364,111 @@ SELECT
 FROM Clientes;
 -- By @JavierEAcevedoN
 
--- 41
-SELECT * FROM
+-- 41 Muestra todos los recursos que pertenecen al sector de Ganaderia por medio de las tareas.
+SELECT
+    re.Nombre,
+    re.Stock,
+    re.Costo,
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje,
+    se.Nombre AS Sector,
+    se.Hectareas
+FROM Recursos_Tareas rt
+INNER JOIN Recursos re ON rt.ID_Recurso = re.ID
+INNER JOIN Tareas ta ON rt.ID_Tarea = ta.ID
+INNER JOIN Sectores se ON ta.ID_Sector = se.ID
+WHERE se.Nombre = "Ganaderia";
+-- By @JavierEAcevedoN
 
--- 42
-SELECT * FROM
+-- 42 Muestra todos los clientes que tiene un 30% de descuento.
+SELECT 
+    CONCAT(cl.Nombre,' ',cl.Apellido) AS NombreCompleto,
+    cl.Fecha_Nacimiento,
+    cl.Telefono,
+    CONCAT(de.Valor,"%") AS Descuento
+FROM Clientes cl
+INNER JOIN Descuentos de ON cl.ID_Descuento = de.ID
+WHERE de.Valor = 30;
+-- By @JavierEAcevedoN
 
--- 43
-SELECT * FROM
+-- 43 Muestra el stock total de todos los productos.
+SELECT
+    SUM(Stock) AS TotalStock
+FROM Productos;
+-- By @JavierEAcevedoN
 
 -- 44
-SELECT * FROM
+SELECT
+    AVG(Valor) AS TotalStock
+FROM Productos;
+-- By @JavierEAcevedoN
 
--- 45
-SELECT * FROM
+-- 45 Muestra los productos que se han vendido.
+SELECT
+    ve.Fecha,
+    ve.Total,
+    dv.Cantidad,
+    dv.Subtotal,
+    pr.Nombre AS Producto,
+    pr.Stock,
+    pr.Valor,
+    pr.Costo
+FROM Detalles_Ventas dv
+INNER JOIN Ventas ve ON dv.ID_Venta = ve.ID
+INNER JOIN Productos pr ON dv.ID_Producto = pr.ID
+WHERE ve.ID IN (
+    SELECT ID_Venta FROM Detalles_Ventas
+);
+-- By @JavierEAcevedoN
 
--- 46
-SELECT * FROM
+-- 46 Muestra los productos que valen menos de 1000.
+SELECT 
+    Nombre,
+    Stock,
+    Valor,
+    Costo
+FROM Productos
+WHERE Valor < 1000;
+-- By @JavierEAcevedoN
 
 -- 47
-SELECT * FROM
+SELECT 
+    Nombre,
+    Stock,
+    Valor,
+    Costo
+FROM Productos
+WHERE Stock < 5;
+-- By @JavierEAcevedoN
 
--- 48
-SELECT * FROM
+-- 48 Muestra los recursos utilizados en una tarea especifica.
+SELECT
+    re.Nombre,
+    re.Stock,
+    re.Costo,
+    ta.Descripción,
+    ta.Fecha_inicio,
+    ta.Fecha_fin,
+    ta.Resultado_Porcentaje
+FROM Recursos_Tareas rt
+INNER JOIN Recursos re ON rt.ID_Recurso = re.ID
+INNER JOIN Tareas ta ON rt.ID_Tarea = ta.ID
+WHERE rt.ID = 1;
+-- By @JavierEAcevedoN
 
 -- 49
-SELECT * FROM
+SELECT
+    *
+FROM
+-- By @JavierEAcevedoN
 
 -- 50
-SELECT * FROM
+SELECT
+    *
+FROM
+-- By @JavierEAcevedoN
 
 -- 51
 SELECT * FROM
