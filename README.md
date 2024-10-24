@@ -15,7 +15,7 @@
 
 ## Diagrama
 
-![UML](Diagrama_E-R_UML.jpg)
+![UML](image/Diagrama_E-R_UML.jpg)
 
 ## Requisitos del Sistema
 
@@ -48,8 +48,6 @@ Sigue los siguientes pasos para configurar el entorno y cargar la base de datos:
 
 El proyecto incluye diferentes procedimientos almacenados, funciones, triggers y eventos que gestionan ciertas actividades automáticas en la base de datos. Para ejecutar estos, sigue las instrucciones a continuación:
 
-[!IMPORTANT] 
-
 > [!IMPORTANT]
 > **Se deben ejecutar los procesos en el siguiente orden para no generar conflictos**
 
@@ -58,19 +56,18 @@ El proyecto incluye diferentes procedimientos almacenados, funciones, triggers y
 3. `DQL_Procedures.sql`
 4. `DQL_Events.sql`
 
-- Procedimientos y funciones se pueden ejecutar manualmente utilizando el comando `CALL` o `SELECT`.
+Procedimientos y funciones se pueden ejecutar manualmente utilizando el comando `CALL` o `SELECT`.
 
-Ejemplo para ejecutar un procedimiento almacenado:
+- Ejemplo para ejecutar un procedimiento almacenado:
 
-```sql
-CALL nombre_del_procedimiento(parametros);
-```
+  ```sql
+  CALL nombre_del_procedimiento(parametros);
+  ```
+- Ejemplo para ejecutar una función:
 
-Ejemplo para ejecutar una función:
-
-```sql
-SELECT nombre_de_funcion(parametros);
-```
+  ```sql
+  SELECT nombre_de_funcion(parametros);
+  ```
 
 - Los triggers y eventos se activan automáticamente cuando ocurren ciertas acciones (como inserciones o actualizaciones) en las tablas asociadas.
 
@@ -82,57 +79,57 @@ Esta sección presenta las tablas principales que conforman la base de datos, pa
 
 - **Propósito** : Almacena información personal de los clientes, como nombre, apellido, fecha de nacimiento y su estado actual (activo o inactivo). También está relacionada con las ciudades en las que residen y los descuentos aplicables.
 - **Relaciones** :
-- Relacionada con la tabla `Estados` para el estado actual del cliente.
-- Relacionada con `Descuentos` para aplicar promociones.
-- Relacionada con `Ciudades` para almacenar la ubicación del cliente.
+  - Relacionada con la tabla `Estados` para el estado actual del cliente.
+  - Relacionada con `Descuentos` para aplicar promociones.
+  - Relacionada con `Ciudades` para almacenar la ubicación del cliente.
 
 ### 2. **Empleados**
 
 - **Propósito** : Almacena información sobre los empleados, incluidos su salario, fecha de contratación y el tipo de empleado.
 - **Relaciones** :
-- Relacionada con `Estados` para su estado laboral.
-- Relacionada con `Tipos_Empleados` para categorizar el rol del empleado.
+  - Relacionada con `Estados` para su estado laboral.
+  - Relacionada con `Tipos_Empleados` para categorizar el rol del empleado.
 
 ### 3. **Ventas**
 
 - **Propósito** : Registra las ventas realizadas por los empleados a los clientes, incluyendo la fecha de venta y el total.
 - **Relaciones** :
-- Relacionada con `Clientes` para identificar quién realiza la compra.
-- Relacionada con `Empleados` para saber quién realiza la venta.
-- Relacionada con `Medios_de_Pago` para especificar cómo se realizó el pago.
+  - Relacionada con `Clientes` para identificar quién realiza la compra.
+  - Relacionada con `Empleados` para saber quién realiza la venta.
+  - Relacionada con `Medios_de_Pago` para especificar cómo se realizó el pago.
 - **Interacción indirecta** con `Productos` a través de la tabla intermedia `Detalles_Ventas`, que detalla los productos vendidos en cada venta.
 
 ### 4. **Productos**
 
 - **Propósito** : Almacena información sobre los productos disponibles, su stock, precio de venta y de coste, así como el descuento aplicable.
 - **Relaciones** :
-- Relacionada con `Descuentos` para aplicar descuentos a los productos.
-- Relacionada con `Estados` para indicar si un producto está disponible o no.
-- Relacionada con `Lotes` para gestionar las fechas de producción de cada producto.
-- Relacionada con `Recursos` para asociar los productos con los recursos que los componen.
+  - Relacionada con `Descuentos` para aplicar descuentos a los productos.
+  - Relacionada con `Estados` para indicar si un producto está disponible o no.
+  - Relacionada con `Lotes` para gestionar las fechas de producción de cada producto.
+  - Relacionada con `Recursos` para asociar los productos con los recursos que los componen.
 
 ### 5. **Proveedores**
 
 - **Propósito** : Almacena información sobre los proveedores que suministran recursos a la finca.
 - **Relaciones** :
-- Relacionada con `Estados` para el estado actual del proveedor.
-- Relacionada con `Tipos_Proveedores` para clasificar el tipo de proveedor.
+  - Relacionada con `Estados` para el estado actual del proveedor.
+  - Relacionada con `Tipos_Proveedores` para clasificar el tipo de proveedor.
 
 ### 6. **Recursos**
 
 - **Propósito** : Contiene la información de los recursos que la finca utiliza o produce, como herramientas, fertilizantes, o materias primas.
 - **Relaciones** :
-- Relacionada con `Estados` para indicar la disponibilidad del recurso.
-- Relacionada con `Tipos_Recursos` para categorizar el tipo de recurso.
-- Puede tener una relación consigo misma a través de los campos `Recurso_Padre_ID` y `Recurso_Generador_ID` para modelar recursos que dependen de otros.
+  - Relacionada con `Estados` para indicar la disponibilidad del recurso.
+  - Relacionada con `Tipos_Recursos` para categorizar el tipo de recurso.
+  - Puede tener una relación consigo misma a través de los campos `Recurso_Padre_ID` y `Recurso_Generador_ID` para modelar recursos que dependen de otros.
 - **Interacción indirecta** con `Compras` mediante la tabla intermedia `Detalles_Compras`, que relaciona los recursos comprados.
 
 ### 7. **Compras**
 
 - **Propósito** : Registra las compras realizadas a los proveedores, con el total de la compra y la fecha.
 - **Relaciones** :
-- Relacionada con `Proveedores` para identificar quién suministró los recursos.
-- Relacionada con `Estados` para el estado de la compra (completada, pendiente, etc.).
+  - Relacionada con `Proveedores` para identificar quién suministró los recursos.
+  - Relacionada con `Estados` para el estado de la compra (completada, pendiente, etc.).
 - **Interacción indirecta** con `Recursos` a través de la tabla intermedia `Detalles_Compras`, que detalla los recursos adquiridos en cada compra.
 
 ### 8. **Tareas**
@@ -313,7 +310,7 @@ En el sistema de la base de datos **Finca El Primer Mundo** , se han definido ci
 
 - **Descripción** : Este rol tiene acceso total a todas las tablas y operaciones dentro de la base de datos.
 - **Permisos** :
-- Puede realizar todas las operaciones (`SELECT`, `INSERT`, `UPDATE`, `DELETE`) en todas las tablas de la base de datos.
+  - Puede realizar todas las operaciones (`SELECT`, `INSERT`, `UPDATE`, `DELETE`) en todas las tablas de la base de datos.
 - **Instrucción para crear el usuario y asignar permisos** :
 
 ```sql
@@ -325,10 +322,10 @@ GRANT ALL PRIVILEGES ON Finca_El_Primer_Mundo.* TO 'AdministradorFinca'@'localho
 
 - **Descripción** : El vendedor puede gestionar las ventas, clientes y visualizar productos.
 - **Permisos** :
-- `Ventas`: Puede `SELECT`, `INSERT`, y `UPDATE`.
-- `Detalles_Ventas`: Puede `SELECT`, `INSERT`, y `UPDATE`.
-- `Clientes`: Puede `SELECT`, `INSERT`.
-- `Productos`: Puede `SELECT` (solo visualizar productos).
+  - `Ventas`: Puede `SELECT`, `INSERT`, y `UPDATE`.
+  - `Detalles_Ventas`: Puede `SELECT`, `INSERT`, y `UPDATE`.
+  - `Clientes`: Puede `SELECT`, `INSERT`.
+  - `Productos`: Puede `SELECT` (solo visualizar productos).
 - **Instrucción para crear el usuario y asignar permisos** :
 
 ```sql
@@ -344,10 +341,10 @@ GRANT SELECT ON Finca_El_Primer_Mundo.Productos TO 'VendedorFinca'@'localhost';
 
 - **Descripción** : El contador puede consultar información sobre ventas y compras, pero no modificarla.
 - **Permisos** :
-- `Ventas`: Puede `SELECT`.
-- `Detalles_Ventas`: Puede `SELECT`.
-- `Compras`: Puede `SELECT`.
-- `Detalles_Compras`: Puede `SELECT`.
+  - `Ventas`: Puede `SELECT`.
+  - `Detalles_Ventas`: Puede `SELECT`.
+  - `Compras`: Puede `SELECT`.
+  - `Detalles_Compras`: Puede `SELECT`.
 - **Instrucción para crear el usuario y asignar permisos** :
 
 ```sql
@@ -362,7 +359,7 @@ GRANT SELECT ON Finca_El_Primer_Mundo.Detalles_Compras TO 'ContadorFinca'@'local
 
 - **Descripción** : El cliente solo puede visualizar información de los productos disponibles.
 - **Permisos** :
-- `Productos`: Puede `SELECT` sobre campos específicos (`ID`, `Nombre`, `Stock`, `Valor`, `ID_Descuento`, `ID_Estado`, `ID_Tipo_Producto`, `ID_Lote`).
+  - `Productos`: Puede `SELECT` sobre campos específicos (`ID`, `Nombre`, `Stock`, `Valor`, `ID_Descuento`, `ID_Estado`, `ID_Tipo_Producto`, `ID_Lote`).
 - **Instrucción para crear el usuario y asignar permisos** :
 
 ```sql
@@ -374,10 +371,10 @@ GRANT SELECT (ID, Nombre, Stock, Valor, ID_Descuento, ID_Estado, ID_Tipo_Product
 
 - **Descripción** : El especialista de inventario tiene permisos para gestionar recursos y proveedores, así como las compras asociadas.
 - **Permisos** :
-- `Recursos`: Puede `SELECT`, `INSERT`, `UPDATE`.
-- `Detalles_Compras`: Puede `SELECT`, `INSERT`, `UPDATE`.
-- `Compras`: Puede `SELECT`, `INSERT`, `UPDATE`.
-- `Proveedores`: Puede `SELECT`.
+  - `Recursos`: Puede `SELECT`, `INSERT`, `UPDATE`.
+  - `Detalles_Compras`: Puede `SELECT`, `INSERT`, `UPDATE`.
+  - `Compras`: Puede `SELECT`, `INSERT`, `UPDATE`.
+  - `Proveedores`: Puede `SELECT`.
 - **Instrucción para crear el usuario y asignar permisos** :
 
 ```sql
@@ -435,7 +432,7 @@ Las contribuciones en este proyecto y sus respectivas tareas fueron de los sigui
 - Complementación en la estructura de la base de datos
 - Desarrollo de:
   - 10 Funciones
-  - 10 Triggers
+  - 11 Triggers
   - 10 Procedimientos almacenados
   - 10 Eventos
 - Implementación de usuarios
